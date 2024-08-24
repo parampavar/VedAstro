@@ -47,7 +47,7 @@ namespace VedAstro.Library
 
         public enum APIProvider
         {
-            VedAstro, Azure, Google, IpData
+            VedAstro, Azure, Google, IpData, CPU
         }
 
 
@@ -56,8 +56,7 @@ namespace VedAstro.Library
         /// </summary>
         public Location()
         {
-            string accountName = "centralapistorage"; //indic heritage 
-            //string accountName = "vedastroapistorage"; //vedastro 
+            string accountName = Secrets.Get("CentralStorageAccountName");
 
             //#SEARCH ADDRESS
             //------------------------------------
@@ -66,7 +65,7 @@ namespace VedAstro.Library
 
             var storageUriSearchAddress = $"https://{accountName}.table.core.windows.net/{tableNameSearchAddress}";
             //save reference for late use
-            searchAddressServiceClient = new TableServiceClient(new Uri(storageUriSearchAddress), new TableSharedKeyCredential(accountName, Secrets.Get("AzureGeoLocationStorageKey")));
+            searchAddressServiceClient = new TableServiceClient(new Uri(storageUriSearchAddress), new TableSharedKeyCredential(accountName, Secrets.Get("CentralStorageKey")));
             searchAddressTableClient = searchAddressServiceClient.GetTableClient(tableNameSearchAddress);
 
             //# ADDRESS
@@ -76,7 +75,7 @@ namespace VedAstro.Library
 
             var storageUriAddress = $"https://{accountName}.table.core.windows.net/{tableNameAddress}";
             //save reference for late use
-            addressServiceClient = new TableServiceClient(new Uri(storageUriAddress), new TableSharedKeyCredential(accountName, Secrets.Get("AzureGeoLocationStorageKey")));
+            addressServiceClient = new TableServiceClient(new Uri(storageUriAddress), new TableSharedKeyCredential(accountName, Secrets.Get("CentralStorageKey")));
             addressTableClient = addressServiceClient.GetTableClient(tableNameAddress);
 
             //Initialize address metadata table 
@@ -84,7 +83,7 @@ namespace VedAstro.Library
             var storageUriAddressMetadata = $"https://{accountName}.table.core.windows.net/{tableNameAddressMetadata}";
 
             //save reference for late use
-            addressMetadataServiceClient = new TableServiceClient(new Uri(storageUriAddressMetadata), new TableSharedKeyCredential(accountName, Secrets.Get("AzureGeoLocationStorageKey")));
+            addressMetadataServiceClient = new TableServiceClient(new Uri(storageUriAddressMetadata), new TableSharedKeyCredential(accountName, Secrets.Get("CentralStorageKey")));
             addressMetadataTableClient = addressMetadataServiceClient.GetTableClient(tableNameAddressMetadata);
 
 
@@ -95,7 +94,7 @@ namespace VedAstro.Library
 
             var storageUriCoordinates = $"https://{accountName}.table.core.windows.net/{tableNameCoordinates}";
             //save reference for late use
-            coordinatesServiceClient = new TableServiceClient(new Uri(storageUriCoordinates), new TableSharedKeyCredential(accountName, Secrets.Get("AzureGeoLocationStorageKey")));
+            coordinatesServiceClient = new TableServiceClient(new Uri(storageUriCoordinates), new TableSharedKeyCredential(accountName, Secrets.Get("CentralStorageKey")));
             coordinatesTableClient = coordinatesServiceClient.GetTableClient(tableNameCoordinates);
 
             //Initialize coordinates metadata table 
@@ -103,7 +102,7 @@ namespace VedAstro.Library
             var storageUriCoordinatesMetadata = $"https://{accountName}.table.core.windows.net/{tableNameCoordinatesMetadata}";
 
             //save reference for late use
-            coordinatesMetadataServiceClient = new TableServiceClient(new Uri(storageUriCoordinatesMetadata), new TableSharedKeyCredential(accountName, Secrets.Get("AzureGeoLocationStorageKey")));
+            coordinatesMetadataServiceClient = new TableServiceClient(new Uri(storageUriCoordinatesMetadata), new TableSharedKeyCredential(accountName, Secrets.Get("CentralStorageKey")));
             coordinatesMetadataTableClient = coordinatesMetadataServiceClient.GetTableClient(tableNameCoordinatesMetadata);
 
 
@@ -113,7 +112,7 @@ namespace VedAstro.Library
             string tableNameIpAddress = "IpAddressGeoLocation";
             var storageUriIpAddress = $"https://{accountName}.table.core.windows.net/{tableNameIpAddress}";
             //save reference for late use
-            ipAddressServiceClient = new TableServiceClient(new Uri(storageUriIpAddress), new TableSharedKeyCredential(accountName, Secrets.Get("AzureGeoLocationStorageKey")));
+            ipAddressServiceClient = new TableServiceClient(new Uri(storageUriIpAddress), new TableSharedKeyCredential(accountName, Secrets.Get("CentralStorageKey")));
             ipAddressTableClient = ipAddressServiceClient.GetTableClient(tableNameIpAddress);
 
             //Initialize address metadata table 
@@ -121,7 +120,7 @@ namespace VedAstro.Library
             var storageUriIpAddressMetadata = $"https://{accountName}.table.core.windows.net/{tableNameIpAddressMetadata}";
 
             //save reference for late use
-            ipAddressMetadataServiceClient = new TableServiceClient(new Uri(storageUriIpAddressMetadata), new TableSharedKeyCredential(accountName, Secrets.Get("AzureGeoLocationStorageKey")));
+            ipAddressMetadataServiceClient = new TableServiceClient(new Uri(storageUriIpAddressMetadata), new TableSharedKeyCredential(accountName, Secrets.Get("CentralStorageKey")));
             ipAddressMetadataTableClient = ipAddressMetadataServiceClient.GetTableClient(tableNameIpAddressMetadata);
 
 
@@ -132,7 +131,7 @@ namespace VedAstro.Library
             var storageUriTimezone = $"https://{accountName}.table.core.windows.net/{tableNameTimezone}";
 
             //save reference for late use
-            timezoneServiceClient = new TableServiceClient(new Uri(storageUriTimezone), new TableSharedKeyCredential(accountName, Secrets.Get("AzureGeoLocationStorageKey")));
+            timezoneServiceClient = new TableServiceClient(new Uri(storageUriTimezone), new TableSharedKeyCredential(accountName, Secrets.Get("CentralStorageKey")));
             timezoneTableClient = timezoneServiceClient.GetTableClient(tableNameTimezone);
 
             //Initialize timezone table 
@@ -140,7 +139,7 @@ namespace VedAstro.Library
             var storageUriTimezoneMetadata = $"https://{accountName}.table.core.windows.net/{tableNameTimezoneMetadata}";
 
             //save reference for late use
-            timezoneMetadataServiceClient = new TableServiceClient(new Uri(storageUriTimezoneMetadata), new TableSharedKeyCredential(accountName, Secrets.Get("AzureGeoLocationStorageKey")));
+            timezoneMetadataServiceClient = new TableServiceClient(new Uri(storageUriTimezoneMetadata), new TableSharedKeyCredential(accountName, Secrets.Get("CentralStorageKey")));
             timezoneMetadataTableClient = timezoneMetadataServiceClient.GetTableClient(tableNameTimezoneMetadata);
 
 
@@ -184,8 +183,16 @@ namespace VedAstro.Library
                 var isNotVedAstro = apiProvider != APIProvider.VedAstro;
                 if (isNotEmpty && isNotVedAstro)
                 {
-                    //add new data to cache, for future speed up
-                    AddToAddressTable(fullGeoRowData.MainRow);
+                    //NOTE: to support local development, since saving to azure db will be unavailable
+                    try
+                    {
+                        //add new data to cache, for future speed up
+                        AddToAddressTable(fullGeoRowData.MainRow);
+                    }
+                    catch (Exception e)
+                    {
+                        // ignored
+                    }
                 }
 
                 //once found, stop searching for location with APIs
@@ -228,8 +235,17 @@ namespace VedAstro.Library
                 var isNotVedAstro = apiProvider != APIProvider.VedAstro;
                 if (isNotEmpty && isNotVedAstro)
                 {
-                    //add new data to cache, for future speed up
-                    AddToSearchAddressTable(fullGeoRowData.MainRow);
+                    //NOTE: to support local development, since saving to azure db will be unavailable
+                    try
+                    {
+                        //add new data to cache, for future speed up
+                        AddToSearchAddressTable(fullGeoRowData.MainRow);
+                    }
+                    catch (Exception e)
+                    {
+                        // ignored
+                    }
+
                 }
 
                 //once found, stop searching for location with APIs
@@ -277,9 +293,17 @@ namespace VedAstro.Library
                 var isNotVedAstro = apiProvider != APIProvider.VedAstro;
                 if (isNotEmpty && isNotVedAstro)
                 {
-                    //add new data to cache, for future speed up
-                    AddToIpAddressTable(fullGeoRowData.MainRow);
-                    AddToIpAddressMetadataTable(fullGeoRowData.MetadataRow);
+                    //NOTE: to support local development, since saving to azure db will be unavailable
+                    try
+                    {
+                        //add new data to cache, for future speed up
+                        AddToIpAddressTable(fullGeoRowData.MainRow);
+                        AddToIpAddressMetadataTable(fullGeoRowData.MetadataRow);
+                    }
+                    catch (Exception e)
+                    {
+                        // ignored
+                    }
                 }
 
                 //once found, stop searching for location with APIs
@@ -328,8 +352,16 @@ namespace VedAstro.Library
                 var isNotVedAstro = apiProvider != APIProvider.VedAstro;
                 if (isNotEmpty && isNotVedAstro)
                 {
-                    //add new data to cache, for future speed up
-                    AddToCoordinatesTable(fullGeoRowData.MainRow);
+                    //NOTE: to support local development, since saving to azure db will be unavailable
+                    try
+                    {
+                        //add new data to cache, for future speed up
+                        AddToCoordinatesTable(fullGeoRowData.MainRow);
+                    }
+                    catch (Exception e)
+                    {
+                        // ignored
+                    }
                 }
 
                 //once found, stop searching for location with APIs
@@ -353,6 +385,7 @@ namespace VedAstro.Library
                 {APIProvider.VedAstro, GeoLocationToTimezone_Vedastro},
                 {APIProvider.Azure, GeoLocationToTimezone_Azure},
                 {APIProvider.Google, GeoLocationToTimezone_Google},
+                {APIProvider.CPU, GeoLocationToTimezone_CPU}, //NOTE: last resort option for testing locally (not accurate)
             };
 
             //start with empty as default if fail
@@ -361,19 +394,36 @@ namespace VedAstro.Library
             // Iterate over the list of functions
             foreach (var row in geoLocationProviders)
             {
-                var provider = row.Value;
-                var fullGeoRowData = (await provider(geoLocation, stdTimeAtLocation));
-                timezoneStr = fullGeoRowData.MainRow.TimezoneText; //exp, +08:00
+                GeoLocationRawAPI fullGeoRowData = null;
+                try
+                {
+                    var provider = row.Value;
+                    fullGeoRowData = (await provider(geoLocation, stdTimeAtLocation));
+                    timezoneStr = fullGeoRowData.MainRow.TimezoneText; //exp, +08:00
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e); //continue silently todo log to error book
+                }
 
                 // when new location not is cache, we add it
                 // only add to cache if not empty and not VedAstro
                 var isNotEmpty = !(string.IsNullOrEmpty(timezoneStr));
                 var apiProvider = row.Key;
                 var isNotVedAstro = apiProvider != APIProvider.VedAstro;
-                if (isNotEmpty && isNotVedAstro)
+                var isNotCPU = apiProvider != APIProvider.CPU;
+                if (isNotEmpty && isNotVedAstro && isNotCPU)
                 {
-                    AddToTimezoneTable(fullGeoRowData.MainRow);
-                    AddToTimezoneMetadataTable(fullGeoRowData.MetadataRow);
+                    //NOTE: to support local development, since saving to azure db will be unavailable
+                    try
+                    {
+                        AddToTimezoneTable(fullGeoRowData.MainRow);
+                        AddToTimezoneMetadataTable(fullGeoRowData.MetadataRow);
+                    }
+                    catch (Exception e)
+                    {
+                        // ignored
+                    }
                 }
 
                 //once found, stop searching for location with APIs
@@ -635,6 +685,31 @@ namespace VedAstro.Library
             //we don't supply metadata cause not needed, as separate query
             return new GeoLocationRawAPI(foundRaw, null);
 
+        }
+
+        private async Task<GeoLocationRawAPI> GeoLocationToTimezone_CPU(GeoLocation geoLocation, DateTimeOffset timeAtLocation)
+        {
+            //based on coordinates calculate possible timezone
+            var timezoneText = Tools.GetTimezoneOffsetLocal(geoLocation, timeAtLocation.UtcDateTime);
+
+            //get time in standard format without timezone
+            var rawString = timeAtLocation.ToString(Time.DateTimeFormat);
+
+            //time at place date time format no timezone
+            var timeAtLocationString = rawString.Replace('/', '-');
+
+            //round to stop overcrowding db (maybe not relevant here)
+            var roundedLong1DeciPlaces11Km = Math.Round(geoLocation.Longitude(), 1).ToString();
+            var roundedLat1DeciPlaces11Km = Math.Round(geoLocation.Latitude(), 1).ToString();
+
+            //latitude & longitude in google search friendly format
+            var latLongAsId = $"{roundedLat1DeciPlaces11Km},{roundedLong1DeciPlaces11Km}";
+
+            //get timezone data out
+            var foundRaw = new GeoLocationTimezoneEntity() { PartitionKey = latLongAsId, RowKey = timeAtLocationString, TimezoneText = timezoneText, MetadataHash = "" };
+
+            //we don't supply metadata cause not needed, as separate query
+            return new GeoLocationRawAPI(foundRaw, null);
         }
 
         /// <summary>
@@ -976,7 +1051,7 @@ namespace VedAstro.Library
             {
                 // Parse Azure API's payload
                 var outData = TryParseAzureSearchAddressResponse(apiResult.Payload, userInputAddress); // out list of parsed geolocation
-                bool isParsed = outData.IsParsed;
+                bool isParsed = outData?.IsParsed ?? false;
                 if (isParsed)
                 {
                     // Convert to string (example: +08:00)
@@ -1087,6 +1162,7 @@ namespace VedAstro.Library
         private static dynamic TryParseGoogleTimeZoneResponse(DateTimeOffset timeAtLocation, GeoLocation geoLocation, XElement apiResultPayload)
         {
 
+
             try
             {
                 //STEP 1: data out
@@ -1147,7 +1223,14 @@ namespace VedAstro.Library
 
                 //extract out the data from google's reply timezone offset
                 var status = apiResultPayload?.Element("status")?.Value ?? "";
-                var failed = status.Contains("INVALID_REQUEST");
+                var failed = status.Contains("INVALID_REQUEST") || status.Contains("REQUEST_DENIED");
+
+                //raise alarm if failed
+                if (failed)
+                {
+                    //todo add logger
+                    throw new Exception($"Google API said : \n{apiResultPayload.ToString()}");
+                }
 
                 //try process data if did NOT fail so far
                 string standardName = "";
@@ -1184,7 +1267,7 @@ namespace VedAstro.Library
 
                 }
 
-                return new
+                var offsetMinFromGoogleXml = new
                 {
                     StandardOffset = stdOffsetMinutes,
                     DaylightSavings = dstOffsetMinutes,
@@ -1192,9 +1275,9 @@ namespace VedAstro.Library
                     DaylightName = standardName, //use back same name
                     ISOName = isoName,
                 };
+                return offsetMinFromGoogleXml;
             }
         }
-
 
         private static dynamic TryParseAzureTimeZoneResponse(DateTimeOffset timeAtLocation, GeoLocation geoLocation, JToken timeZoneResponseJson)
         {
@@ -1307,7 +1390,6 @@ namespace VedAstro.Library
             }
         }
 
-
         private static dynamic TryParseAzureSearchAddressResponse(JToken geocodeResponseJson, string userInputAddress)
         {
             try
@@ -1317,22 +1399,20 @@ namespace VedAstro.Library
                 var parsedList = new List<GeoLocation>();
                 foreach (var rawAzureReply in rawAzureReplyMultiple)
                 {
-                    //check the data, if location was NOT found by Azure Maps API, end here
-                    if (rawAzureReply == null || rawAzureReply["type"].Value<string>() != "Geography") { return null; }
+                    //check the data, if location was NOT found by Azure Maps API, goto next
+                    if (rawAzureReply == null) { continue; }
 
                     //if success, extract out the longitude & latitude
                     var locationElement = rawAzureReply["position"];
-                    var lat = double.Parse(locationElement["lat"].Value<string>() ?? "0");
-                    var lng = double.Parse(locationElement["lon"].Value<string>() ?? "0");
+                    var lat = double.Parse(locationElement?["lat"]?.Value<string>() ?? "0");
+                    var lng = double.Parse(locationElement?["lon"]?.Value<string>() ?? "0");
 
                     //round coordinates to 3 decimal places
                     lat = Math.Round(lat, 3);
                     lng = Math.Round(lng, 3);
 
                     //get full name with country & state
-                    var freeformAddress = rawAzureReply["address"]["freeformAddress"].Value<string>();
-                    var country = rawAzureReply["address"]["country"].Value<string>();
-                    var fullName = $"{freeformAddress}, {country}";
+                    var fullName = GetShortestDescriptiveLocationName(rawAzureReply);
 
                     var mainRow = new GeoLocation(fullName, lng, lat);
 
@@ -1342,23 +1422,56 @@ namespace VedAstro.Library
 
                 //package such that it look like it came from VedAstro db for easy interop
                 var jsonListString = Tools.ListToJson(parsedList).ToString(Formatting.None);
-                var finalPack = new SearchAddressGeoLocationEntity()
-                { PartitionKey = userInputAddress, RowKey = "", Results = jsonListString };
-
-                return new { IsParsed = true, MainRow = finalPack };
+                var finalPack = new SearchAddressGeoLocationEntity { PartitionKey = userInputAddress, RowKey = "", Results = jsonListString };
+                var returnValue = new { IsParsed = true, MainRow = finalPack };
+                return returnValue;
 
             }
             catch
             {
                 //if fail return empty and fail
-                return new
-                {
-                    IsParsed = false,
-                    MainRow = new List<GeoLocation>()
-                };
+                return new { IsParsed = false, MainRow = SearchAddressGeoLocationEntity.Empty };
             }
         }
 
+        /// <summary>
+        /// Given a json object containing name info for a location,
+        /// extract & create final location name which is shortest but still descriptive 
+        /// </summary>
+        /// <param name="rawAzureReply"></param>
+        public static string GetShortestDescriptiveLocationName(JToken rawAzureReply)
+        {
+            //sample json
+            //"address": {
+            //    "municipality": "Ipoh",
+            //    "countrySecondarySubdivision": "Kinta",
+            //    "countrySubdivision": "Perak",
+            //    "countrySubdivisionName": "Perak",
+            //    "countrySubdivisionCode": "8",
+            //    "countryCode": "MY",
+            //    "country": "Malaysia",
+            //    "countryCodeISO3": "MYS",
+            //    "freeformAddress": "Ipoh, Perak"
+            //},
+
+            // Extract the address info from the JSON object
+            var addressNameInfoJson = rawAzureReply?["address"] ?? new JObject();
+
+            // Extract relevant fields from the address info
+            var country = addressNameInfoJson?["country"]?.Value<string>() ?? "";
+            var countryCodeISO3 = addressNameInfoJson?["countryCodeISO3"]?.Value<string>() ?? "";
+            var freeformAddress = addressNameInfoJson?["freeformAddress"]?.Value<string>() ?? "";
+
+            // use the full country name only when there is text space,
+            //NOTE: to make nice in GUI dropdown, auto choose iso name when street name is too long
+            var fullCountryName = $"{freeformAddress}, {country}";
+            var isoCountryName = $"{freeformAddress}, {countryCodeISO3}";
+            var locationName = fullCountryName.Length < 50 ? fullCountryName : isoCountryName;
+
+            // Trim the resulting location name to remove any unnecessary whitespace
+            return locationName?.Trim();
+
+        }
 
         private static dynamic TryParseGoogleAddressResponse(JToken geocodeResponseJson, string userInputAddress)
         {

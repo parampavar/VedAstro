@@ -39,7 +39,7 @@ using Microsoft.Bing.ImageSearch.Models;
 using MimeDetective.Definitions;
 using Formatting = Newtonsoft.Json.Formatting;
 using XmlSerializer = System.Xml.Serialization.XmlSerializer;
-
+using System.Reflection.Metadata;
 
 
 //█ ▀ █▀▄▀█   █▄░█ █▀█ ▀█▀   ▄▀█ █▄░█   █ █▄░█ █▀▀ █░█   ▀█▀ █▀█ █▀█   █▀▀ ▄▀█ █▀█
@@ -122,7 +122,7 @@ namespace VedAstro.Library
             response.WriteBytes(gif);
             return response;
         }
-       
+
 
         /// <summary>
         /// SPECIAL METHOD made to allow files straight from blob to be sent to caller
@@ -1793,30 +1793,29 @@ namespace VedAstro.Library
         /// </summary>
         public static async Task<WebResult<GeoLocation>> AddressToGeoLocation(string address)
         {
-            //get location data from VedAstro API
-            var allUrls = new URL(ThisAssembly.BranchName.Contains("beta")); //todo clean up
-            //exp : .../Calculate/AddressToGeoLocation/London
-            var url = allUrls.AddressToGeoLocationAPI + $"/Address/{address}";
-            var webResult = await Tools.ReadFromServerJsonReplyVedAstro(url);
 
-            //if fail to make call, end here
-            if (!webResult.IsPass) { return new WebResult<GeoLocation>(false, GeoLocation.Empty); }
+            //CACHE MECHANISM
+            return await CacheManager.GetCache(new CacheKey("Tools.AddressToGeoLocation", address), addressToGeoLocation);
 
-            //if success, get the reply data out
-            var rootJson = webResult.Payload;
-            var parsed = GeoLocation.FromJson(rootJson);
+            async Task<WebResult<GeoLocation>> addressToGeoLocation()
+            {
+                //get location data from VedAstro API
+                var allUrls = new URL(ThisAssembly.BranchName.Contains("beta")); //todo clean up
+                //exp : .../Calculate/AddressToGeoLocation/London
+                var url = allUrls.AddressToGeoLocationAPI + $"/Address/{address}";
+                var webResult = await Tools.ReadFromServerJsonReplyVedAstro(url);
 
-            //return to caller pass
-            return new WebResult<GeoLocation>(true, parsed);
+                //if fail to make call, end here
+                if (!webResult.IsPass) { return new WebResult<GeoLocation>(false, GeoLocation.Empty); }
 
+                //if success, get the reply data out
+                var rootJson = webResult.Payload;
+                var parsed = GeoLocation.FromJson(rootJson);
 
-            ////CACHE MECHANISM
-            //return await CacheManager.GetCache(new CacheKey("Tools.AddressToGeoLocation", address), addressToGeoLocation);
+                //return to caller pass
+                return new WebResult<GeoLocation>(true, parsed);
 
-            //async Task<WebResult<GeoLocation>> addressToGeoLocation()
-            //{
-            //}
-
+            }
 
         }
 
@@ -1859,8 +1858,46 @@ namespace VedAstro.Library
         }
 
         /// <summary>
+        /// backup approximate non historic timezone calculator
+        /// </summary>
+        public static string GetTimezoneOffsetLocal(GeoLocation geoLocation, DateTime time)
+        {
+            // Calculate the timezone offset from the coordinates
+            var offset = CalculateTimeZoneOffset(geoLocation.Latitude(), geoLocation.Longitude());
+
+            // Format the offset as a string
+            var hours = (int)offset;
+            var minutes = (int)((offset - hours) * 60);
+            var offsetString = $"{(offset >= 0 ? "+" : "-")}{Math.Abs(hours):D2}:{Math.Abs(minutes):D2}";
+
+            return offsetString;
+        }
+
+        /// <summary>
+        /// backup approximate non historic timezone calculator
+        /// </summary>
+        private static double CalculateTimeZoneOffset(double latitude, double longitude)
+        {
+            // This is a simplified implementation that assumes a linear relationship
+            // between longitude and timezone offset. In reality, the relationship is
+            // more complex and depends on the country and region.
+
+            // Adjust the longitude to the range [-180, 180]
+            longitude = (longitude + 180) % 360 - 180;
+
+            // Calculate the offset in hours
+            var offset = longitude / 15;
+
+            return offset;
+        }
+
+
+
+        /// <summary>
         /// Given a location & time, will use live/local VedAstro API server to get data
-        /// also in memory cached
+        ///  - Cached in runtime memory
+        ///  - Checks API live and local during debug mode
+        ///  - Uses backup low accuracy timezone if all else fails (via api)
         /// </summary>
         public static async Task<WebResult<string>> GetTimezoneOffsetApi(GeoLocation geoLocation, DateTimeOffset timeAtLocation)
         {
@@ -2439,17 +2476,30 @@ namespace VedAstro.Library
         }
 
         /// <summary>
-        /// Converts any String from URL epx : ../Text/Juliet
+        /// Converts any String
         /// </summary>
 
+        /// <summary>
+        /// Extracts the string value from a given URL.
+        /// from URL exp : ../PersonName/Juliet 
+        /// </summary>
+        /// <param name="url">The input URL from which to extract the string value.</param>
+        /// <returns>The extracted string value from the URL, or null if the URL is null or malformed.</returns>
         public static string StringFromUrl(string url)
         {
+            // Return null if the input URL is null or empty
+            if (string.IsNullOrEmpty(url)) { return null; }
+
+            // Split the URL into parts based on the '/' character, ignoring empty entries
             string[] parts = url.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            //string has simple structure ../Text/Juliet
+            //must be minimum two elements in string, data & value
+            if (parts.Length < 2) { return ""; }
+
+            // Get the second part of the URL as the string value
             var stringValue = parts[1];
 
-            return stringValue;
+            return stringValue; // Return the extracted string value
         }
 
         /// <summary>
@@ -3407,7 +3457,13 @@ namespace VedAstro.Library
 
                         return rootPayloadJson;
                     }
+                case List<GeoLocation> geolocationList:
+                    {
+                        var parsed = GeoLocation.ToJsonList(geolocationList);
+                        rootPayloadJson = new JProperty(dataName, parsed);
 
+                        return rootPayloadJson;
+                    }
                 case IList iList:
                     {
                         //convert list to comma separated string
@@ -4119,12 +4175,12 @@ namespace VedAstro.Library
             if (string.IsNullOrEmpty(ownerId))
             {
                 // Query without person Id, possible to return multiple values
-                foundCalls = AzureTable.PersonList_Indic.Query<PersonListEntity>(row => row.RowKey == personId);
+                foundCalls = AzureTable.PersonList.Query<PersonListEntity>(row => row.RowKey == personId);
             }
             else
             {
                 // Query with both ownerId and personId for accurate hit
-                foundCalls = AzureTable.PersonList_Indic.Query<PersonListEntity>(row => row.PartitionKey == ownerId && row.RowKey == personId);
+                foundCalls = AzureTable.PersonList.Query<PersonListEntity>(row => row.PartitionKey == ownerId && row.RowKey == personId);
             }
 
             // If person not found, check shared list
@@ -4134,7 +4190,7 @@ namespace VedAstro.Library
                 // If share found, get person directly without original ownerId
                 if (rawSharedList.Any())
                 {
-                    foundCalls = AzureTable.PersonList_Indic.Query<PersonListEntity>(row => row.RowKey == personId);
+                    foundCalls = AzureTable.PersonList.Query<PersonListEntity>(row => row.RowKey == personId);
                 }
             }
             // Log error if more than 1 person found
