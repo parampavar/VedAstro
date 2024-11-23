@@ -287,7 +287,7 @@ namespace VedAstro.Library
             foreach (var house in kendraList)
             {
                 //true if no planet found
-                var noPlanet = Calculate.PlanetsInHouse(house, birthTime).Any() == false;
+                var noPlanet = Calculate.PlanetsInHouseBasedOnSign(house, birthTime).Any() == false;
                 if (noPlanet) { isOccuring = false; break; } //set as not occuring, stop checking anymore
 
             }
@@ -416,8 +416,8 @@ namespace VedAstro.Library
             var beneficsInKendra = Calculate.IsBeneficsInKendra(birthTime);
 
             //the 6th and 8th must be free
-            var _6thEmpty = Calculate.PlanetsInHouse(House6, birthTime).Count == 0;
-            var _8thEmpty = Calculate.PlanetsInHouse(House8, birthTime).Count == 0;
+            var _6thEmpty = Calculate.PlanetsInHouseBasedOnSign(House6, birthTime).Count == 0;
+            var _8thEmpty = Calculate.PlanetsInHouseBasedOnSign(House8, birthTime).Count == 0;
             var _6th8thIsEmpty = _6thEmpty && _8thEmpty;
 
             //the 6th and 8th occupied by benefics
