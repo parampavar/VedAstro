@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using static VedAstro.Library.HouseName;
 //makes accessing Planet and House shorter and sweeter
@@ -307,7 +308,7 @@ namespace VedAstro.Library
         public static CalculatorResult MoonAshtakavargaYoga2B(Time birthTime)
         {
             //Moon in the 6th or 11th 
-            var moonHouse = Calculate.HousePlanetOccupiesBasedOnSign(Moon, birthTime);
+            var moonHouse = Calculate.HousePlanetOccupiesBasedOnLongitudes(Moon, birthTime);
             var isMoonIn6th11th = moonHouse == House6 || moonHouse == House11;
 
             //associated with more than 6 bindus
@@ -352,7 +353,7 @@ namespace VedAstro.Library
             var rahuIn2nd = Calculate.IsPlanetInHouse(Rahu, House2, birthTime);
 
             // The Moon occupies the 7th or 8th
-            var moonHouse = Calculate.HousePlanetOccupiesBasedOnSign(Moon, birthTime);
+            var moonHouse = Calculate.HousePlanetOccupiesBasedOnLongitudes(Moon, birthTime);
             var moonIn7thOr8th = moonHouse == House7 || moonHouse == House8;
 
             // with 1, 2 or 3 bindus
@@ -649,7 +650,7 @@ namespace VedAstro.Library
             var marsIn10th = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House10, birthTime);
 
             // Get the house occupied by the Moon (Chandra Lagna)
-            var moonHouse = Calculate.HousePlanetOccupiesBasedOnSign(PlanetName.Moon, birthTime);
+            var moonHouse = Calculate.HousePlanetOccupiesBasedOnLongitudes(PlanetName.Moon, birthTime);
 
             // Check if Mars occupies the same house as Moon (Chandra Lagna)
             var marsInChandraLagna = Calculate.IsPlanetInHouse(PlanetName.Mars, moonHouse, birthTime);
@@ -1638,7 +1639,7 @@ namespace VedAstro.Library
             var lordOfMercurySign = Calculate.LordOfZodiacSign(mercurySign);
 
             // Determine the house in which the lord of Mercury's sign is placed
-            var houseOfLord = Calculate.HousePlanetOccupiesBasedOnSign(lordOfMercurySign, birthTime);
+            var houseOfLord = Calculate.HousePlanetOccupiesBasedOnLongitudes(lordOfMercurySign, birthTime);
 
             // Check if the lord is in the 6th, 8th, or 12th house
             bool isLordIn6th = houseOfLord == House6;
