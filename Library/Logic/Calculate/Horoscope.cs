@@ -701,7 +701,7 @@ namespace VedAstro.Library
         }
 
         /// <summary>
-        /// Mars as lord of Lagna or the 8th, is in Lagna, or Chandra Lagna or in the 10th or 9th,
+        /// Mars as lord of Lagna or the 8th, is in Lagna, or Chandra Lagna or in the 10th or 9th from Moon,
         /// associated with no or a few bindus and joined by a debilitated or inimical planet.
         /// </summary>
         [HoroscopeCalculator(HoroscopeName.MarsAshtakavargaYoga9)]
@@ -717,9 +717,13 @@ namespace VedAstro.Library
             var marsSign = Calculate.PlanetZodiacSign(Mars, birthTime).GetSignName();
             var moonSign = Calculate.PlanetZodiacSign(Moon, birthTime).GetSignName();
             var marsInChandraLagna = marsSign == moonSign;
-            var marsIn9th = Calculate.IsPlanetInHouse(Mars, House9, birthTime);
-            var marsIn10th = Calculate.IsPlanetInHouse(Mars, House10, birthTime);
-            var marsIsInCorrectPlace = marsInLagna || marsInChandraLagna || marsIn9th || marsIn10th;
+            //NOTE: book does not say "from Moon", infered based on tests in 
+            // Check if Mars occupies the 9th house from Moon
+            var marsIn9thFromMoon = Calculate.SignDistanceFromPlanetToPlanet(Moon, Mars, birthTime) == 9;
+
+            // Check if Mars occupies the 10th house from Moon
+            var marsIn10thFromMoon = Calculate.SignDistanceFromPlanetToPlanet(Moon, Mars, birthTime) == 10;
+            var marsIsInCorrectPlace = marsInLagna || marsInChandraLagna || marsIn9thFromMoon || marsIn10thFromMoon;
 
             // Condition C: Mars has no or few bindus (0 to 3)
             var marsBindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
