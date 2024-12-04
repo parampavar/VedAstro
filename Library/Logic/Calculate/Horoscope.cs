@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using static VedAstro.Library.HouseName;
 //makes accessing Planet and House shorter and sweeter
 using static VedAstro.Library.PlanetName;
@@ -44,16 +45,16 @@ namespace VedAstro.Library
             //get bindus for sun
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Sun, birthTime);
 
-            //bindus are 3 or 4 
-            var correctBindus = bindus == 3 || bindus == 4;
+            //all below maximum 4
+            var correctBindus = bindus <= 4;
 
             //not happen to be in his place of exaltation or own sign.
-            var sunNotExalted = !(Calculate.IsPlanetExalted(Sun, birthTime));
-            var sunNotOwnSign = !(Calculate.IsPlanetInOwnHouse(Sun, birthTime));
+            var sunNotExalted = !(Calculate.IsPlanetExaltedSign(Sun, birthTime));
+            var sunNotOwnSign = !(Calculate.IsPlanetInOwnSign(Sun, birthTime));
 
             var isOccuring = correctBindus && sunNotExalted && sunNotOwnSign;
 
-            return CalculatorResult.New(isOccuring, new[] { Sun }, birthTime);
+            return CalculatorResult.New(isOccuring, [Sun], birthTime);
 
         }
 
@@ -67,7 +68,7 @@ namespace VedAstro.Library
             //get bindus for sun
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Sun, birthTime);
 
-            // having more than 5 or 6 bindus
+            // having more than 5
             var correctBindus = bindus >= 5;
 
             //the Sun as ascendant lord
@@ -75,7 +76,7 @@ namespace VedAstro.Library
 
             var isOccuring = correctBindus && sunIsAscendantLord;
 
-            return CalculatorResult.New(isOccuring, new[] { Sun }, birthTime);
+            return CalculatorResult.New(isOccuring, [Sun], birthTime);
 
         }
 
@@ -90,7 +91,7 @@ namespace VedAstro.Library
             //get bindus for sun
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Sun, birthTime);
 
-            //more than 5 bindus
+            // minimum 5 bindus
             var moreThan5 = bindus > 5;
 
             //happens to be a Kendra or Trikona
@@ -98,7 +99,7 @@ namespace VedAstro.Library
 
             var isOccuring = moreThan5 && isKendraOrTrikona;
 
-            return CalculatorResult.New(isOccuring, new[] { Sun }, birthTime);
+            return CalculatorResult.New(isOccuring, [Sun], birthTime);
         }
 
         /// <summary>
@@ -123,7 +124,7 @@ namespace VedAstro.Library
 
             var isOccuring = correctBindus && isFriendlySign && isKendraOrTrikona;
 
-            return CalculatorResult.New(isOccuring, new[] { Sun }, birthTime);
+            return CalculatorResult.New(isOccuring, [Sun], birthTime);
         }
 
         /// <summary>
@@ -142,12 +143,12 @@ namespace VedAstro.Library
             //get bindus for sun
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Sun, birthTime);
 
-            //number of bindus is 3
-            var correctBindus = bindus == 3;
+            //number of bindus is maximum 3
+            var correctBindus = bindus <= 3;
 
             var isOccuring = correctBindus && sunIn9th && sunWithRahu;
 
-            return CalculatorResult.New(isOccuring, new[] { Sun, Rahu }, birthTime);
+            return CalculatorResult.New(isOccuring, [Sun, Rahu], birthTime);
 
         }
 
@@ -164,8 +165,8 @@ namespace VedAstro.Library
             //get bindus for sun
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Sun, birthTime);
 
-            //number of bindus is 3
-            var correctBindus = bindus == 3;
+            //number of bindus is maximum 3
+            var correctBindus = bindus <= 3;
 
             // association with Moon, Mars, and Saturn
             var moonIn5th = Calculate.IsPlanetInHouse(Moon, House5, birthTime);
@@ -175,7 +176,7 @@ namespace VedAstro.Library
 
             var isOccuring = correctBindus && sunIn5th && association;
 
-            return CalculatorResult.New(isOccuring, new[] { Sun, Moon, Mars, Saturn }, birthTime);
+            return CalculatorResult.New(isOccuring, [Sun, Moon, Mars, Saturn], birthTime);
         }
 
         /// <summary>
@@ -191,8 +192,8 @@ namespace VedAstro.Library
             //get bindus for sun
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Sun, birthTime);
 
-            //number of bindus is 3
-            var correctBindus = bindus == 3 || bindus == 4;
+            //number of bindus maximum 4
+            var correctBindus = bindus <= 4;
 
             //get all malefics aspecting sun, then check if any are in 9th house
             var maleficsAspectingSun = Calculate.GetAllMaleficPlanetsAspecting(Sun, birthTime);
@@ -200,7 +201,7 @@ namespace VedAstro.Library
 
             var isOccuring = sunIn3rd && correctBindus && maleficsAspectingFrom9th;
 
-            return CalculatorResult.New(isOccuring, new HouseName[] { House9 }, new[] { Sun }, birthTime);
+            return CalculatorResult.New(isOccuring, [House9], [Sun], birthTime);
 
         }
 
@@ -217,17 +218,17 @@ namespace VedAstro.Library
             // get bindus for sun
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Sun, birthTime);
 
-            // number of bindus is 4
+            // number of bindus is maximum 6
             // TODO NOTE: discrepancy in book, text on pg 38 says 4 bindus
             //            but tested example given on pg 39 says 6 bindus
-            var correctBindus = bindus == 6;
+            var correctBindus = bindus <= 6;
 
             // aspected by Jupiter
-            var aspectedByJupiter = Calculate.IsPlanetAspectedByPlanet(PlanetName.Sun, PlanetName.Jupiter, birthTime);
+            var aspectedByJupiter = Calculate.IsPlanetAspectedByPlanet(Sun, Jupiter, birthTime);
 
             var isOccuring = sunIn6 && correctBindus && aspectedByJupiter;
 
-            return CalculatorResult.New(isOccuring, new HouseName[] { House6 }, new[] { Sun, Jupiter }, birthTime);
+            return CalculatorResult.New(isOccuring, [House6], [Sun, Jupiter], birthTime);
 
         }
 
@@ -244,12 +245,12 @@ namespace VedAstro.Library
             // get bindus for sun
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Sun, birthTime);
 
-            //  has five or more bindus
+            // has five or more bindus
             var correctBindus = bindus >= 5;
 
             var isOccuring = isKendraOrTrikona && correctBindus;
 
-            return CalculatorResult.New(isOccuring, new[] { Sun }, birthTime);
+            return CalculatorResult.New(isOccuring, [Sun], birthTime);
 
         }
 
@@ -268,10 +269,10 @@ namespace VedAstro.Library
             //get bindus for moon
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Moon, birthTime);
 
-            //associated with 1,2,3 bindus
-            var isOccuring = bindus == 1 || bindus == 2 || bindus == 3;
+            //associated with maximum 3 bindus
+            var isOccuring = bindus <= 3;
 
-            return CalculatorResult.New(isOccuring, new[] { Moon }, birthTime);
+            return CalculatorResult.New(isOccuring, [Moon], birthTime);
         }
 
         /// <summary>
@@ -297,7 +298,7 @@ namespace VedAstro.Library
 
             var isOccuring = yoga1A && moonWith2Or3Planets;
 
-            return CalculatorResult.New(isOccuring, new[] { Moon }, birthTime);
+            return CalculatorResult.New(isOccuring, [Moon], birthTime);
         }
 
         /// <summary>
@@ -318,7 +319,7 @@ namespace VedAstro.Library
             //both condition meet
             var isOccuring = isMoonIn6th11th && moreThan6;
 
-            return CalculatorResult.New(isOccuring, new[] { Moon }, birthTime);
+            return CalculatorResult.New(isOccuring, [Moon], birthTime);
         }
 
         /// <summary>
@@ -331,14 +332,14 @@ namespace VedAstro.Library
             // Moon is in a Kendra
             var isMoonInKendra = Calculate.IsPlanetInKendra(Moon, birthTime);
 
-            // associated with 7 to 8 bindus
+            // associated minimum 7
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Moon, birthTime);
-            var correctBindus = bindus >= 7 && bindus <= 8;
+            var correctBindus = bindus >= 7;
 
             // both conditions meet
             var isOccuring = isMoonInKendra && correctBindus;
 
-            return CalculatorResult.New(isOccuring, new[] { Moon }, birthTime);
+            return CalculatorResult.New(isOccuring, [Moon], birthTime);
 
         }
 
@@ -356,14 +357,14 @@ namespace VedAstro.Library
             var moonHouse = Calculate.HousePlanetOccupiesBasedOnLongitudes(Moon, birthTime);
             var moonIn7thOr8th = moonHouse == House7 || moonHouse == House8;
 
-            // with 1, 2 or 3 bindus
+            // with maximum 3 bindus
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Moon, birthTime);
-            var correctBindus = bindus == 1 || bindus == 2 || bindus == 3;
+            var correctBindus = bindus <= 3;
 
             // all conditions meet
             var isOccuring = rahuIn2nd && moonIn7thOr8th && correctBindus;
 
-            return CalculatorResult.New(isOccuring, new[] { Moon, Rahu }, birthTime);
+            return CalculatorResult.New(isOccuring, [Moon, Rahu], birthTime);
         }
 
         /// <summary>
@@ -378,8 +379,8 @@ namespace VedAstro.Library
             // Check if Mars is in the 4th or 8th house from the Moon
             var marsIn4thOr8thFromMoon = marsHouseFromMoon == 4 || marsHouseFromMoon == 8;
 
-            // Get bindus for Mars (in mars's own ashtakvarga)
-            var marsBindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
+            // Get bindus for Mars (in moon's ashtakvarga)
+            var marsBindus = Calculate.PlanetAshtakvargaBinduByPlanet(Moon, Mars, birthTime);
 
             // Check if Mars has less bindus (assuming "less" means below a specific threshold, e.g., 3)
             var marsHasLessBindus = marsBindus <= 3;
@@ -387,7 +388,7 @@ namespace VedAstro.Library
             // Check both conditions
             var isOccuring = marsIn4thOr8thFromMoon && marsHasLessBindus;
 
-            return CalculatorResult.New(isOccuring, new[] { Mars, Moon }, birthTime);
+            return CalculatorResult.New(isOccuring, [Mars, Moon], birthTime);
 
         }
 
@@ -407,9 +408,9 @@ namespace VedAstro.Library
             // Check if Moon is in Kendra or 12th house
             var moonInKendraOr12th = moonInKendra || moonIn12th;
 
-            // Moon has 1 to 3 bindus in its own Ashtakavarga
+            // Moon has maximum 3 bindus in its own Ashtakavarga
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Moon, birthTime);
-            var correctBindus = bindus >= 1 && bindus <= 3;
+            var correctBindus = bindus <= 3;
 
             // Check if 4th house is joined by malefic planets
             var maleficIn4th = Calculate.IsMaleficPlanetInHouse(House4, birthTime);
@@ -418,7 +419,7 @@ namespace VedAstro.Library
             var isOccuring = moonInKendraOr12th && correctBindus && maleficIn4th;
 
             // Return the calculation result
-            return CalculatorResult.New(isOccuring, new[] { House4 }, new[] { Moon }, birthTime);
+            return CalculatorResult.New(isOccuring, [House4], [Moon], birthTime);
 
         }
 
@@ -438,18 +439,19 @@ namespace VedAstro.Library
             // Get bindus for Moon
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Moon, birthTime);
 
-            // Check if bindus are 1, 2, 3 or no bindus (0)
-            var correctBindus = bindus == 0 || bindus == 1 || bindus == 2 || bindus == 3;
+            // Check if bindus maximum 3
+            var correctBindus = bindus <= 3;
 
             // All conditions must be met
             var isOccuring = isMoonWaning && moonInLagna && correctBindus;
 
-            return CalculatorResult.New(isOccuring, new[] { Moon }, birthTime);
+            return CalculatorResult.New(isOccuring, [Moon], birthTime);
 
         }
 
         /// <summary>
-        /// Mother's death can take place in the 36th year if the 4th house is occupied by malefics and the Moon is in Lagna associated with few bindus.
+        /// Mother's death can take place in the 36th year if the 4th house is occupied by malefics and
+        /// the Moon is in Lagna associated with few bindus.
         /// </summary>
         [HoroscopeCalculator(HoroscopeName.MoonAshtakavargaYoga10)]
         public static CalculatorResult MoonAshtakavargaYoga10(Time birthTime)
@@ -464,13 +466,13 @@ namespace VedAstro.Library
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Moon, birthTime);
 
             // Check if bindus are few (e.g., 1 to 3)
-            var bindusAreFew = bindus >= 1 && bindus <= 3;
+            var bindusAreFew = bindus <= 3;
 
             // All conditions must be met
             var isOccuring = maleficIn4th && moonInLagna && bindusAreFew;
 
             // Return the calculation result
-            return CalculatorResult.New(isOccuring, new[] { House4 }, new[] { Moon }, birthTime);
+            return CalculatorResult.New(isOccuring, [House4], [Moon], birthTime);
         }
 
         //MARS
@@ -482,34 +484,34 @@ namespace VedAstro.Library
         public static CalculatorResult MarsAshtakavargaYoga2(Time birthTime)
         {
             // Check if Mars is exalted
-            var marsIsExalted = Calculate.IsPlanetExalted(PlanetName.Mars, birthTime);
+            var marsIsExalted = Calculate.IsPlanetExaltedSign(Mars, birthTime);
 
             // Check if Mars is in his own sign
-            var marsInOwnSign = Calculate.IsPlanetInOwnHouse(PlanetName.Mars, birthTime);
+            var marsInOwnSign = Calculate.IsPlanetInOwnSign(Mars, birthTime);
 
             // Mars is exalted or in his own sign
             var marsExaltedOrOwnSign = marsIsExalted || marsInOwnSign;
 
             // Check if Mars is occupying the 9th, 4th, 10th, or 1st house
-            var marsIn1st = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House1, birthTime);
-            var marsIn4th = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House4, birthTime);
-            var marsIn9th = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House9, birthTime);
-            var marsIn10th = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House10, birthTime);
+            var marsIn1st = Calculate.IsPlanetInHouse(Mars, House1, birthTime);
+            var marsIn4th = Calculate.IsPlanetInHouse(Mars, House4, birthTime);
+            var marsIn9th = Calculate.IsPlanetInHouse(Mars, House9, birthTime);
+            var marsIn10th = Calculate.IsPlanetInHouse(Mars, House10, birthTime);
 
             // Mars is in one of the specified houses
             var marsInCorrectHouse = marsIn1st || marsIn4th || marsIn9th || marsIn10th;
 
             // Get bindus for Mars in his own Ashtakavarga
-            var bindus = Calculate.PlanetOwnAshtakvargaBindu(PlanetName.Mars, birthTime);
+            var bindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
 
             // Check if Mars is associated with 8 bindus
-            var correctBindus = bindus == 8;
+            var correctBindus = bindus >= 8;
 
             // All conditions must be met
             var isOccurring = marsExaltedOrOwnSign && marsInCorrectHouse && correctBindus;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { PlanetName.Mars }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars], birthTime);
         }
 
         /// <summary>
@@ -536,19 +538,19 @@ namespace VedAstro.Library
             var isAscendantInRequiredSigns = requiredAscendantSigns.Contains(ascendantSign);
 
             // Check if Mars occupies the ascendant (House1)
-            var marsInAscendant = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House1, birthTime);
+            var marsInAscendant = Calculate.IsPlanetInHouse(Mars, House1, birthTime);
 
             // Get bindus for Mars in his own Ashtakavarga
-            var marsBindus = Calculate.PlanetOwnAshtakvargaBindu(PlanetName.Mars, birthTime);
+            var marsBindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
 
-            // Check if Mars is associated with 4 bindus
-            var marsHasFourBindus = marsBindus == 4;
+            // Check if Mars is associated with minimum 4 bindus
+            var marsHasFourBindus = marsBindus >= 4;
 
             // All conditions must be met
             var isOccurring = isAscendantInRequiredSigns && marsInAscendant && marsHasFourBindus;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { PlanetName.Mars }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars], birthTime);
         }
 
         /// <summary>
@@ -567,7 +569,7 @@ namespace VedAstro.Library
             var isOccurring = hasEightBindus;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { Mars }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars], birthTime);
         }
 
         /// <summary>
@@ -578,15 +580,15 @@ namespace VedAstro.Library
         public static CalculatorResult MarsAshtakavargaYoga5(Time birthTime)
         {
             // Get bindus for Mars in his own Ashtakavarga
-            var bindus = Calculate.PlanetOwnAshtakvargaBindu(PlanetName.Mars, birthTime);
+            var bindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
 
             // Check if Mars is associated with 8 bindus
             var correctBindus = bindus == 8;
 
             // Check if Mars is occupying the ascendant (House1), 2nd, or 10th house
-            var marsInAscendant = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House1, birthTime);
-            var marsIn2nd = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House2, birthTime);
-            var marsIn10th = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House10, birthTime);
+            var marsInAscendant = Calculate.IsPlanetInHouse(Mars, House1, birthTime);
+            var marsIn2nd = Calculate.IsPlanetInHouse(Mars, House2, birthTime);
+            var marsIn10th = Calculate.IsPlanetInHouse(Mars, House10, birthTime);
 
             var marsInCorrectHouse = marsInAscendant || marsIn2nd || marsIn10th;
 
@@ -594,7 +596,7 @@ namespace VedAstro.Library
             var isOccurring = correctBindus && marsInCorrectHouse;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { PlanetName.Mars }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars], birthTime);
         }
 
         /// <summary>
@@ -605,64 +607,65 @@ namespace VedAstro.Library
         public static CalculatorResult MarsAshtakavargaYoga6(Time birthTime)
         {
             // Get the number of bindus for Mars in its own Ashtakavarga
-            var bindus = Calculate.PlanetOwnAshtakvargaBindu(PlanetName.Mars, birthTime);
+            var bindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
             var hasEightBindus = bindus == 8;
 
             // Check if Mars is in the ascendant (1st house), 10th, or 2nd house
-            var marsInAscendant = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House1, birthTime);
-            var marsIn10th = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House10, birthTime);
-            var marsIn2nd = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House2, birthTime);
+            var marsInAscendant = Calculate.IsPlanetInHouse(Mars, House1, birthTime);
+            var marsIn10th = Calculate.IsPlanetInHouse(Mars, House10, birthTime);
+            var marsIn2nd = Calculate.IsPlanetInHouse(Mars, House2, birthTime);
             var marsInCorrectHouse = marsInAscendant || marsIn10th || marsIn2nd;
 
             // Check if Mars is exalted or in his own sign
-            var marsIsExalted = Calculate.IsPlanetExalted(PlanetName.Mars, birthTime);
-            var marsInOwnSign = Calculate.IsPlanetInOwnHouse(PlanetName.Mars, birthTime);
+            var marsIsExalted = Calculate.IsPlanetExaltedSign(Mars, birthTime);
+            var marsInOwnSign = Calculate.IsPlanetInOwnSign(Mars, birthTime);
             var marsExaltedOrOwnSign = marsIsExalted || marsInOwnSign;
 
             // All conditions must be met
             var isOccurring = hasEightBindus && marsInCorrectHouse && marsExaltedOrOwnSign;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { PlanetName.Mars }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars], birthTime);
         }
 
         /// <summary>
         /// One will become wealthy if Mars, associated with 4 or more bindus, 
-        /// occupies the Lagna, Chandra Lagna (Moon's house), or the 9th or 10th house, 
+        /// occupies the Lagna, Chandra Lagna (Moon's house), or the 9th or 10th from Moon, 
         /// which should also happen to be his own or exaltation sign.
         /// </summary>
         [HoroscopeCalculator(HoroscopeName.MarsAshtakavargaYoga7)]
         public static CalculatorResult MarsAshtakavargaYoga7(Time birthTime)
         {
             // Get bindus for Mars in his own Ashtakavarga
-            var bindus = Calculate.PlanetOwnAshtakvargaBindu(PlanetName.Mars, birthTime);
+            var bindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
 
             // Check if Mars has 4 or more bindus
             var correctBindus = bindus >= 4;
 
             // Check if Mars occupies Lagna (1st house)
-            var marsInLagna = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House1, birthTime);
+            var marsInLagna = Calculate.IsPlanetInHouse(Mars, House1, birthTime);
 
-            // Check if Mars occupies the 9th house
-            var marsIn9th = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House9, birthTime);
+            //NOTE: discrepancy in book text pg52 vs test text pg 53 (using test text instead)
+            // Check if Mars occupies the 9th house from Moon
+            var marsIn9thFromMoon = Calculate.SignDistanceFromPlanetToPlanet(Moon, Mars, birthTime) == 9;
 
-            // Check if Mars occupies the 10th house
-            var marsIn10th = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House10, birthTime);
+            // Check if Mars occupies the 10th house from Moon
+            var marsIn10thFromMoon = Calculate.SignDistanceFromPlanetToPlanet(Moon, Mars, birthTime) == 10;
 
             // Get the house occupied by the Moon (Chandra Lagna)
-            var moonHouse = Calculate.HousePlanetOccupiesBasedOnLongitudes(PlanetName.Moon, birthTime);
+            var moonHouse = Calculate.HousePlanetOccupiesBasedOnLongitudes(Moon, birthTime);
 
             // Check if Mars occupies the same house as Moon (Chandra Lagna)
-            var marsInChandraLagna = Calculate.IsPlanetInHouse(PlanetName.Mars, moonHouse, birthTime);
+            var marsInChandraLagna = Calculate.IsPlanetInHouse(Mars, moonHouse, birthTime);
 
             // Mars is in one of the specified houses
-            var marsInCorrectHouse = marsInLagna || marsIn9th || marsIn10th || marsInChandraLagna;
+            var marsInCorrectHouse = marsInLagna || marsIn9thFromMoon || marsIn10thFromMoon || marsInChandraLagna;
 
             // Check if Mars is in his own sign
-            var marsInOwnSign = Calculate.IsPlanetInOwnHouse(PlanetName.Mars, birthTime);
+            var marsInOwnSign = Calculate.IsPlanetInOwnSign(Mars, birthTime);
 
             // Check if Mars is in his exaltation sign
-            var marsIsExalted = Calculate.IsPlanetExalted(PlanetName.Mars, birthTime);
+            var marsIsExalted = Calculate.IsPlanetExaltedSign(Mars, birthTime);
 
             // The sign occupied by Mars should be his own sign or exaltation sign
             var marsInOwnOrExaltationSign = marsInOwnSign || marsIsExalted;
@@ -671,7 +674,7 @@ namespace VedAstro.Library
             var isOccurring = correctBindus && marsInCorrectHouse && marsInOwnOrExaltationSign;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { PlanetName.Mars }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars], birthTime);
         }
 
         /// <summary>
@@ -694,7 +697,7 @@ namespace VedAstro.Library
             // All conditions met
             bool isOccuring = marsIsLordOf2nd && marsIn6th && marsHas6Bindus;
 
-            return CalculatorResult.New(isOccuring, new[] { Mars }, birthTime);
+            return CalculatorResult.New(isOccuring, [Mars], birthTime);
         }
 
         /// <summary>
@@ -720,7 +723,7 @@ namespace VedAstro.Library
 
             // Condition C: Mars has no or few bindus (0 to 3)
             var marsBindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
-            var marsHasFewBindus = marsBindus >= 0 && marsBindus <= 3;
+            var marsHasFewBindus = marsBindus <= 3;
 
             // Condition D: Mars is joined by a debilitated or inimical planet (malefic planet)
             var planetsWithMars = Calculate.PlanetsInSign(marsSign, birthTime);
@@ -756,8 +759,8 @@ namespace VedAstro.Library
             // Get bindus for Mars in his own Ashtakavarga
             var bindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
 
-            // Check if Mars has 6 bindus
-            var marsHas6Bindus = bindus == 6;
+            // Check if Mars has max 6 bindus
+            var marsHas6Bindus = bindus <= 6;
 
             // Check if Mars occupies the 6th, 8th, or 12th house
             var marsIn6th = Calculate.IsPlanetInHouse(Mars, House6, birthTime);
@@ -788,7 +791,7 @@ namespace VedAstro.Library
             var isOccurring = marsHas6Bindus && marsIn6th8th12th && marsIsDebilitatedOrCombust && marsJoinedByWaxingMoon;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { Mars, Moon }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars, Moon], birthTime);
         }
 
         /// <summary>
@@ -797,9 +800,9 @@ namespace VedAstro.Library
         [HoroscopeCalculator(HoroscopeName.MarsAshtakavargaYoga10B)]
         public static CalculatorResult MarsAshtakavargaYoga10B(Time birthTime)
         {
-            // Step 1: Mars with 6 bindus
+            // Step 1: Mars with minimum 6 bindus
             int marsBindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
-            bool marsHas6Bindus = marsBindus == 6;
+            bool marsHas6Bindus = marsBindus >= 6;
 
             // Step 2: Mars occupies the 6th, 8th, or 12th house
             bool marsIn6th = Calculate.IsPlanetInHouse(Mars, House6, birthTime);
@@ -824,7 +827,7 @@ namespace VedAstro.Library
             bool isOccurring = marsHas6Bindus && marsIn6th8th12th && marsDebilitatedOrCombust && marsWithWaxingMoon && marsIsStrong;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { Mars, Moon }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars, Moon], birthTime);
         }
 
         /// <summary>
@@ -834,16 +837,16 @@ namespace VedAstro.Library
         public static CalculatorResult MarsAshtakavargaYoga11(Time birthTime)
         {
             // Get bindus for Mars in his own Ashtakavarga
-            var bindus = Calculate.PlanetOwnAshtakvargaBindu(PlanetName.Mars, birthTime);
+            var bindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
 
-            // Check if Mars has 4 bindus
-            var has4Bindus = bindus == 4;
+            // Check if Mars has minimum 4 bindus
+            var has4Bindus = bindus >= 4;
 
             // Check if Mars occupies the 5th house
-            var marsIn5th = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House5, birthTime);
+            var marsIn5th = Calculate.IsPlanetInHouse(Mars, House5, birthTime);
 
             // Check if Mars occupies Lagna (1st house)
-            var marsInLagna = Calculate.IsPlanetInHouse(PlanetName.Mars, HouseName.House1, birthTime);
+            var marsInLagna = Calculate.IsPlanetInHouse(Mars, House1, birthTime);
 
             // Check if Mars occupies any quadrant (Kendra)
             var marsInQuadrant = Calculate.IsPlanetInKendra(Mars, birthTime);
@@ -855,7 +858,7 @@ namespace VedAstro.Library
             var isOccurring = has4Bindus && marsInCorrectHouse;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { PlanetName.Mars }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars], birthTime);
         }
 
         /// <summary>
@@ -869,13 +872,13 @@ namespace VedAstro.Library
 
             // Check Mars
             var marsBindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
-            var marsHas1to3Bindus = marsBindus >= 1 && marsBindus <= 3;
+            var marsHas1to3Bindus = marsBindus <= 3; //max 3
             var marsIn3rdHouse = Calculate.IsPlanetInHouse(Mars, House3, birthTime);
             var marsCondition = marsIn3rdHouse && marsHas1to3Bindus;
 
-            // Check Saturn
-            var saturnBindus = Calculate.PlanetOwnAshtakvargaBindu(Saturn, birthTime);
-            var saturnHas1to3Bindus = saturnBindus >= 1 && saturnBindus <= 3;
+            // Check Saturn (in Mars's Ashtakvarga )
+            var saturnBindus = Calculate.PlanetAshtakvargaBinduByPlanet(Mars, Saturn, birthTime);
+            var saturnHas1to3Bindus = saturnBindus <= 3; //max 3
             var saturnIn3rdHouse = Calculate.IsPlanetInHouse(Saturn, House3, birthTime);
             var saturnCondition = saturnIn3rdHouse && saturnHas1to3Bindus;
 
@@ -903,7 +906,7 @@ namespace VedAstro.Library
             // Both conditions must be met
             var isOccurring = condition1 && condition2;
 
-            return CalculatorResult.New(isOccurring, new[] { HouseName.House3 }, new[] { PlanetName.Mars, Saturn }, birthTime);
+            return CalculatorResult.New(isOccurring, [House3], [Mars, Saturn], birthTime);
         }
 
         /// <summary>
@@ -917,13 +920,13 @@ namespace VedAstro.Library
 
             // Check Mars
             var marsBindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
-            var marsHas1to3Bindus = marsBindus >= 1 && marsBindus <= 3;
+            var marsHas1to3Bindus = marsBindus <= 3; // max 3
             var marsIn3rdHouse = Calculate.IsPlanetInHouse(Mars, House3, birthTime);
             var marsCondition = marsIn3rdHouse && marsHas1to3Bindus;
 
             // Check Saturn
-            var saturnBindus = Calculate.PlanetOwnAshtakvargaBindu(Saturn, birthTime);
-            var saturnHas1to3Bindus = saturnBindus >= 1 && saturnBindus <= 3;
+            var saturnBindus = Calculate.PlanetAshtakvargaBinduByPlanet(Mars, Saturn, birthTime);
+            var saturnHas1to3Bindus = saturnBindus <= 3; // max 3
             var saturnIn3rdHouse = Calculate.IsPlanetInHouse(Saturn, House3, birthTime);
             var saturnCondition = saturnIn3rdHouse && saturnHas1to3Bindus;
 
@@ -951,7 +954,7 @@ namespace VedAstro.Library
             // Both conditions must be met
             var isOccurring = condition1 && condition2;
 
-            return CalculatorResult.New(isOccurring, new[] { HouseName.House3 }, new[] { PlanetName.Mars, Saturn }, birthTime);
+            return CalculatorResult.New(isOccurring, [House3], [Mars, Saturn], birthTime);
         }
 
         /// <summary>
@@ -962,14 +965,14 @@ namespace VedAstro.Library
         public static CalculatorResult MarsAshtakavargaYoga13A(Time birthTime)
         {
             // Saturn with 1 to 3 bindus (note assumed that both conditions need 1-3 bindus)
-            var saturnBindus = Calculate.PlanetOwnAshtakvargaBindu(PlanetName.Saturn, birthTime);
-            var saturnHas1To3Bindus = saturnBindus >= 1 && saturnBindus <= 3;
+            var saturnBindus = Calculate.PlanetAshtakvargaBinduByPlanet(Mars, Saturn, birthTime);
+            var saturnHas1To3Bindus = saturnBindus <= 3; // max 3
 
             // Get the ascendant sign
             var ascendantSign = Calculate.LagnaSignName(birthTime);
 
             // Get Saturn's sign
-            var saturnSign = Calculate.PlanetZodiacSign(PlanetName.Saturn, birthTime).GetSignName();
+            var saturnSign = Calculate.PlanetZodiacSign(Saturn, birthTime).GetSignName();
 
             // Option A:
             // If the ascendant is a movable sign
@@ -993,7 +996,7 @@ namespace VedAstro.Library
             var isOccurring = optionA || optionB;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { PlanetName.Saturn }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars, Saturn], birthTime);
         }
 
         /// <summary>
@@ -1009,16 +1012,16 @@ namespace VedAstro.Library
             var ascendantIsFixedSign = Calculate.IsFixedSign(ascendantSign);
 
             // Get bindus for Saturn in its own Ashtakavarga
-            var saturnBindus = Calculate.PlanetOwnAshtakvargaBindu(PlanetName.Saturn, birthTime);
+            var saturnBindus = Calculate.PlanetAshtakvargaBinduByPlanet(Mars, Saturn, birthTime);
 
-            // Check if Saturn has 1 to 3 bindus
-            var saturnHas1to3Bindus = saturnBindus >= 1 && saturnBindus <= 3;
+            // Check if Saturn has max 3 bindus
+            var saturnHas1to3Bindus = saturnBindus <= 3;
 
             // Get bindus for Mars in its own Ashtakavarga
-            var marsBindus = Calculate.PlanetOwnAshtakvargaBindu(PlanetName.Mars, birthTime);
+            var marsBindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
 
-            // Check if Mars has 1 to 3 bindus
-            var marsHas1to3Bindus = marsBindus >= 1 && marsBindus <= 3;
+            // Check if Mars has max 3 bindus
+            var marsHas1to3Bindus = marsBindus <= 3;
 
             // Check if either Saturn or Mars has 1 to 3 bindus
             var saturnOrMarsHas1to3Bindus = saturnHas1to3Bindus || marsHas1to3Bindus;
@@ -1027,7 +1030,7 @@ namespace VedAstro.Library
             var isOccurring = ascendantIsFixedSign && saturnOrMarsHas1to3Bindus;
 
             // Return the calculation result
-            return CalculatorResult.New(isOccurring, new[] { PlanetName.Saturn, PlanetName.Mars }, birthTime);
+            return CalculatorResult.New(isOccurring, [Saturn, Mars], birthTime);
         }
 
         /// <summary>
@@ -1040,12 +1043,12 @@ namespace VedAstro.Library
             var ascendantSign = Calculate.LagnaSignName(birthTime);
             var ascendantIsMovable = Calculate.IsMovableSign(ascendantSign);
 
-            // Condition B: Saturn with 5 bindus
-            var saturnBindus = Calculate.PlanetOwnAshtakvargaBindu(PlanetName.Saturn, birthTime);
-            var saturnHas5Bindus = saturnBindus == 5;
+            // Condition B: Saturn with minimum 5 bindus
+            var saturnBindus = Calculate.PlanetAshtakvargaBinduByPlanet(Mars, Saturn, birthTime);
+            var saturnHas5Bindus = saturnBindus >= 5;
 
             // Condition C: Saturn is in a movable or fixed sign
-            var saturnSign = Calculate.PlanetZodiacSign(PlanetName.Saturn, birthTime).GetSignName();
+            var saturnSign = Calculate.PlanetZodiacSign(Saturn, birthTime).GetSignName();
             var saturnInMovableSign = Calculate.IsMovableSign(saturnSign);
             var saturnInFixedSign = Calculate.IsFixedSign(saturnSign);
             var saturnInMovableOrFixedSign = saturnInMovableSign || saturnInFixedSign;
@@ -1054,7 +1057,7 @@ namespace VedAstro.Library
             var isOccurring = ascendantIsMovable && saturnHas5Bindus && saturnInMovableOrFixedSign;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { PlanetName.Saturn }, birthTime);
+            return CalculatorResult.New(isOccurring, [Saturn, Mars], birthTime);
         }
 
         /// <summary>
@@ -1074,15 +1077,15 @@ namespace VedAstro.Library
             var lordOf3rdSign = Calculate.PlanetZodiacSign(lordOf3rd, birthTime).GetSignName();
             var isLordOf3rdInCommonSign = Calculate.IsCommonSign(lordOf3rdSign);
 
-            // The 3rd lord has 5 bindus in its own Ashtakavarga
-            var bindus = Calculate.PlanetOwnAshtakvargaBindu(lordOf3rd, birthTime);
-            var has5Bindus = bindus == 5;
+            // The 3rd lord has minimum 5 bindus in Mars Ashtakavarga
+            var bindus = Calculate.PlanetAshtakvargaBinduByPlanet(Mars, lordOf3rd, birthTime);
+            var has5Bindus = bindus >= 5;
 
             // All conditions must be met
             var isOccurring = isLagnaFixed && isLordOf3rdInCommonSign && has5Bindus;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { lordOf3rd }, birthTime);
+            return CalculatorResult.New(isOccurring, [lordOf3rd], birthTime);
         }
 
         /// <summary>
@@ -1111,7 +1114,7 @@ namespace VedAstro.Library
             var isOccurring = marsIn3rd && marsHas5OrMoreBindus && marsAssociatedOrAspectedByBenefic;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { Mars }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars], birthTime);
         }
 
         /// <summary>
@@ -1150,6 +1153,7 @@ namespace VedAstro.Library
             if (conditionA)
             {
                 isOccurring = true;
+                goto End;
             }
 
             // (b) Mars and Saturn occupy Lagna, associated with 1 to 3 bindus
@@ -1158,16 +1162,17 @@ namespace VedAstro.Library
             bool marsInLagna = Calculate.IsPlanetInHouse(Mars, House1, birthTime);
             bool saturnInLagna = Calculate.IsPlanetInHouse(Saturn, House1, birthTime);
 
-            // Mars and Saturn have 1 to 3 bindus
-            bool marsHas1to3Bindus = marsBindus >= 1 && marsBindus <= 3;
-            int saturnBindus = Calculate.PlanetOwnAshtakvargaBindu(Saturn, birthTime);
-            bool saturnHas1to3Bindus = saturnBindus >= 1 && saturnBindus <= 3;
+            // Mars and Saturn have max 3 bindus
+            bool marsHas1to3Bindus = marsBindus <= 3;
+            int saturnBindus = Calculate.PlanetAshtakvargaBinduByPlanet(Mars, Saturn, birthTime);
+            bool saturnHas1to3Bindus = saturnBindus <= 3;
 
             bool conditionB = marsInLagna && saturnInLagna && marsHas1to3Bindus && saturnHas1to3Bindus;
 
             if (conditionB)
             {
                 isOccurring = true;
+                goto End;
             }
 
             // (c) when Mars endowed with 1 to 3 bindus is in the 8th from Saturn or vice versa
@@ -1176,7 +1181,7 @@ namespace VedAstro.Library
             int marsFromSaturn = Calculate.SignDistanceFromPlanetToPlanet(Saturn, Mars, birthTime);
             int saturnFromMars = Calculate.SignDistanceFromPlanetToPlanet(Mars, Saturn, birthTime);
 
-            // Check if Mars is in the 8th from Saturn or vice versa
+            // Check if Mars (max 3 bindus) is in the 8th from Saturn or vice versa
             bool marsIn8thFromSaturn = marsFromSaturn == 8 && marsHas1to3Bindus;
             bool saturnIn8thFromMars = saturnFromMars == 8 && saturnHas1to3Bindus;
 
@@ -1185,6 +1190,7 @@ namespace VedAstro.Library
             if (conditionC)
             {
                 isOccurring = true;
+                goto End;
             }
 
             // (d) when Mars is in the 8th from Saturn and malefics are in the 3rd from Lagna, both with 1 to 3 bindus
@@ -1198,14 +1204,14 @@ namespace VedAstro.Library
 
             bool maleficsIn3rdFromLagna = maleficsIn3rd.Any();
 
-            // Mars has 1 to 3 bindus
-            bool marsHas1to3Bindus_D = marsBindus >= 1 && marsBindus <= 3;
+            // Mars has max 3 bindus
+            bool marsHas1to3Bindus_D = marsBindus <= 3;
 
-            // Malefics in 3rd have 1 to 3 bindus
+            // Malefics in 3rd have max 3 bindus (in Mars Ashtakvarga)
             bool maleficsIn3rdWith1to3Bindus = maleficsIn3rd.Any(malefic =>
             {
-                int bindus = Calculate.PlanetOwnAshtakvargaBindu(malefic, birthTime);
-                return bindus >= 1 && bindus <= 3;
+                int bindus = Calculate.PlanetAshtakvargaBinduByPlanet(Mars, malefic, birthTime);
+                return bindus <= 3;
             });
 
             bool conditionD = marsIn8thFromSaturn_D && marsHas1to3Bindus_D && maleficsIn3rdFromLagna && maleficsIn3rdWith1to3Bindus;
@@ -1213,10 +1219,12 @@ namespace VedAstro.Library
             if (conditionD)
             {
                 isOccurring = true;
+                goto End;
             }
 
+        End:
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { PlanetName.Mars }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars, Saturn], birthTime);
         }
 
         /// <summary>
@@ -1237,7 +1245,7 @@ namespace VedAstro.Library
             // Both conditions must be met
             var isOccurring = marsIn3rdHouse && marsHas3Bindus;
 
-            return CalculatorResult.New(isOccurring, new[] { House3 }, new[] { Mars }, birthTime);
+            return CalculatorResult.New(isOccurring, [House3], [Mars], birthTime);
         }
 
         /// <summary>
@@ -1259,14 +1267,14 @@ namespace VedAstro.Library
             // Get bindus for Mars in his own Ashtakavarga
             var marsBindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
 
-            // Check if Mars has 4 bindus
-            var marsHas4Bindus = marsBindus == 4;
+            // Check if Mars has minimum 4 bindus
+            var marsHas4Bindus = marsBindus >= 4;
 
             // All conditions must be met
             var isOccurring = marsInRequiredSign && marsInKendraOrTrikona && marsHas4Bindus;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { Mars }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars], birthTime);
         }
 
         /// <summary>
@@ -1300,7 +1308,7 @@ namespace VedAstro.Library
             bool isOccurring = marsHas5OrMoreBindus && marsConjunctOrMutualAspectSaturn;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { Mars, Saturn }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars, Saturn], birthTime);
         }
 
         /// <summary>
@@ -1312,8 +1320,8 @@ namespace VedAstro.Library
             // Get bindus for Mars in his own Ashtakavarga
             int marsBindus = Calculate.PlanetOwnAshtakvargaBindu(Mars, birthTime);
 
-            // Check if Mars has 1 to 3 bindus
-            bool marsHas1to3Bindus = marsBindus >= 1 && marsBindus <= 3;
+            // Check if Mars has max 3 bindus
+            bool marsHas1to3Bindus = marsBindus <= 3;
 
             // Check if Mars is in conjunction with Mercury
             bool marsConjunctMercury = Calculate.IsPlanetConjunctWithPlanet(Mars, Mercury, birthTime);
@@ -1328,7 +1336,7 @@ namespace VedAstro.Library
             bool isOccurring = marsHas1to3Bindus && marsWithMercury;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { Mars, Mercury }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars, Mercury], birthTime);
         }
 
         /// <summary>
@@ -1356,7 +1364,7 @@ namespace VedAstro.Library
             var isOccurring = marsHas5OrMoreBindus && marsJoinedOrAspectedByMoon;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { Mars, Moon }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mars, Moon], birthTime);
         }
 
         //MERCURY
@@ -1370,8 +1378,8 @@ namespace VedAstro.Library
             // Get bindus for Mercury in its own Ashtakavarga
             int mercuryBindus = Calculate.PlanetOwnAshtakvargaBindu(Mercury, birthTime);
 
-            // Check if Mercury has 1 to 3 bindus
-            bool mercuryHas1to3Bindus = mercuryBindus >= 1 && mercuryBindus <= 3;
+            // Check if Mercury has maximum 3 bindus
+            bool mercuryHas1to3Bindus = mercuryBindus <= 3;
 
             // Check if Mercury is in the 6th or 8th house
             bool mercuryIn6th = Calculate.IsPlanetInHouse(Mercury, House6, birthTime);
@@ -1386,7 +1394,7 @@ namespace VedAstro.Library
             bool isOccurring = mercuryHas1to3Bindus && mercuryIn6thOr8th && mercuryDevoidOfBeneficAspects;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new HouseName[] { House6, House8 }, new[] { Mercury }, birthTime);
+            return CalculatorResult.New(isOccurring, [House6, House8], [Mercury], birthTime);
         }
 
         /// <summary>
@@ -1398,8 +1406,8 @@ namespace VedAstro.Library
             // Get bindus for Mercury in its own Ashtakavarga
             var mercuryBindus = Calculate.PlanetOwnAshtakvargaBindu(Mercury, birthTime);
 
-            // Check if Mercury has 1 to 3 bindus
-            var mercuryHas1To3Bindus = mercuryBindus >= 1 && mercuryBindus <= 3;
+            // Check if Mercury has maximum 3 bindus
+            var mercuryHas1To3Bindus = mercuryBindus <= 3;
 
             // Check if Mercury occupies the 6th, 8th, or 12th house
             var mercuryIn6th = Calculate.IsPlanetInHouse(Mercury, House6, birthTime);
@@ -1415,7 +1423,7 @@ namespace VedAstro.Library
             var isOccurring = mercuryHas1To3Bindus && mercuryIn6th8th12th && mercuryConjunctVenus;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new HouseName[] { House6, House8, House12 }, new[] { Mercury, Venus }, birthTime);
+            return CalculatorResult.New(isOccurring, [House6, House8, House12], [Mercury, Venus], birthTime);
         }
 
         /// <summary>
@@ -1432,8 +1440,8 @@ namespace VedAstro.Library
             // Get bindus for Mercury in its own Ashtakavarga
             var mercuryBindus = Calculate.PlanetOwnAshtakvargaBindu(Mercury, birthTime);
 
-            // Check if Mercury has 5 bindus
-            var mercuryHas5Bindus = mercuryBindus == 5;
+            // Check if Mercury has minimum 5 bindus
+            var mercuryHas5Bindus = mercuryBindus >= 5;
 
             // Check if Mercury is joined or aspected by Jupiter or Saturn
 
@@ -1453,7 +1461,7 @@ namespace VedAstro.Library
             var isOccurring = mercuryInTrineOrQuadrant && (mercuryHas5Bindus) && mercuryJoinedOrAspectedByJupiterOrSaturn;
 
             // Return the result, including the relevant planets
-            return CalculatorResult.New(isOccurring, new[] { Mercury, Jupiter, Saturn }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mercury, Jupiter, Saturn], birthTime);
         }
 
         /// <summary>
@@ -1462,9 +1470,9 @@ namespace VedAstro.Library
         [HoroscopeCalculator(HoroscopeName.MercuryAshtakavargaYoga6)]
         public static CalculatorResult MercuryAshtakavargaYoga6(Time birthTime)
         {
-            // Mercury with 5 bindus
+            // Mercury with minimum 5 bindus
             int mercuryBindus = Calculate.PlanetOwnAshtakvargaBindu(Mercury, birthTime);
-            bool mercuryHas5Bindus = mercuryBindus == 5;
+            bool mercuryHas5Bindus = mercuryBindus >= 5;
 
             // Mercury is in the 4th or 6th from Saturn
             int mercuryFromSaturn = Calculate.SignDistanceFromPlanetToPlanet(Saturn, Mercury, birthTime);
@@ -1480,7 +1488,7 @@ namespace VedAstro.Library
             bool isOccurring = mercuryHas5Bindus && mercuryIn4thOr6thFromSaturn && jupiterOccupiesOrAspects2nd;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { House2 }, new[] { Mercury, Saturn, Jupiter }, birthTime);
+            return CalculatorResult.New(isOccurring, [House2], [Mercury, Saturn, Jupiter], birthTime);
         }
 
         /// <summary>
@@ -1492,8 +1500,8 @@ namespace VedAstro.Library
             // Get bindus for Mercury in its own Ashtakavarga
             int mercuryBindus = Calculate.PlanetOwnAshtakvargaBindu(Mercury, birthTime);
 
-            // Check if Mercury has 5 bindus
-            bool mercuryHas5Bindus = mercuryBindus == 5;
+            // Check if Mercury has minimum 5 bindus
+            bool mercuryHas5Bindus = mercuryBindus >= 5;
 
             // Check if Mercury conjoins Jupiter
             bool mercuryConjunctJupiter = Calculate.IsPlanetConjunctWithPlanet(Mercury, Jupiter, birthTime);
@@ -1512,7 +1520,7 @@ namespace VedAstro.Library
             bool isOccurring = mercuryHas5Bindus && (mercuryConjunctJupiter || mercuryWithMars);
 
             // Collect relevant planets
-            List<PlanetName> relevantPlanets = new List<PlanetName> { Mercury };
+            List<PlanetName> relevantPlanets = [Mercury];
             if (mercuryConjunctJupiter)
             {
                 relevantPlanets.Add(Jupiter);
@@ -1527,17 +1535,16 @@ namespace VedAstro.Library
         }
 
         /// <summary>
-        /// If Ketu, associated with 3 bindus (in Mercury’s Ashtakavarga), is in the 5th house or with the lord of the 5th house
+        /// If Ketu, associated with minimum 3 bindus (in Mercury’s Ashtakavarga), is in the 5th house or with the lord of the 5th house
         /// </summary>
         [HoroscopeCalculator(HoroscopeName.MercuryAshtakavargaYoga8)]
         public static CalculatorResult MercuryAshtakavargaYoga8(Time birthTime)
         {
             // Get the number of bindus that Ketu has in Mercury's Ashtakavarga
-            var ketuSignName = Calculate.PlanetZodiacSign(Ketu, birthTime).GetSignName();
-            int ketuBindusInMercuryAshtakavarga = Calculate.PlanetAshtakvargaBindu(Mercury, ketuSignName, birthTime);
+            int ketuBindusInMercuryAshtakavarga = Calculate.PlanetAshtakvargaBinduByPlanet(Mercury, Ketu, birthTime);
 
-            // Check if Ketu has 3 bindus in Mercury's Ashtakavarga
-            bool ketuHasThreeBindus = ketuBindusInMercuryAshtakavarga == 3;
+            // Check if Ketu has minimum 3 bindus in Mercury's Ashtakavarga
+            bool ketuHasThreeBindus = ketuBindusInMercuryAshtakavarga >= 3;
 
             // Check if Ketu is in the 5th house
             bool ketuInFifthHouse = Calculate.IsPlanetInHouse(Ketu, House5, birthTime);
@@ -1545,7 +1552,7 @@ namespace VedAstro.Library
             // Get the lord of the 5th house
             var lordOfFifthHouse = Calculate.LordOfHouse(House5, birthTime);
 
-            // Check if Ketu is with the lord of the 5th house (i.e., in the same sign)
+            // Check if Ketu is with the lord of the 5th house
             bool ketuConjunctWithLordOfFifth = Calculate.IsPlanetConjunctWithPlanet(Ketu, lordOfFifthHouse, birthTime);
 
             // The condition is met if Ketu has 3 bindus in Mercury's Ashtakavarga and
@@ -1553,7 +1560,7 @@ namespace VedAstro.Library
             bool isOccurring = ketuHasThreeBindus && (ketuInFifthHouse || ketuConjunctWithLordOfFifth);
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { Ketu }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mercury, Ketu], birthTime);
         }
 
         /// <summary>
@@ -1565,8 +1572,8 @@ namespace VedAstro.Library
             // Get bindus for Mercury in its own Ashtakavarga
             int mercuryBindus = Calculate.PlanetOwnAshtakvargaBindu(Mercury, birthTime);
 
-            // Check if Mercury has 4 bindus
-            bool mercuryHas4Bindus = mercuryBindus == 4;
+            // Check if Mercury has minimum 4 bindus
+            bool mercuryHas4Bindus = mercuryBindus >= 4;
 
             // Get Mercury's sign
             var mercurySign = Calculate.PlanetZodiacSign(Mercury, birthTime).GetSignName();
@@ -1593,7 +1600,7 @@ namespace VedAstro.Library
             bool isOccurring = mercuryHas4Bindus && mercuryInSignOfMars && mercuryInNavamsaOfVenus && mercuryAspectedByJupiter;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { Mercury, Jupiter }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mercury, Jupiter], birthTime);
         }
 
         /// <summary>
@@ -1614,7 +1621,7 @@ namespace VedAstro.Library
             bool isLordInTrineOrQuadrant = lordInTrine || lordInQuadrant;
 
             // Get bindus for the lord of Mercury's sign in its own Ashtakavarga
-            int lordBindus = Calculate.PlanetOwnAshtakvargaBindu(mercurySignLord, birthTime);
+            int lordBindus = Calculate.PlanetAshtakvargaBinduByPlanet(Mercury, Venus, birthTime);
 
             // Determine if the lord is associated with more bindus (assuming 5 or more is "more bindus")
             bool hasMoreBindus = lordBindus >= 5;
@@ -1623,7 +1630,7 @@ namespace VedAstro.Library
             bool isOccurring = isLordInTrineOrQuadrant && hasMoreBindus;
 
             // Return the result
-            return CalculatorResult.New(isOccurring, new[] { mercurySignLord }, birthTime);
+            return CalculatorResult.New(isOccurring, [Mercury, mercurySignLord], birthTime);
         }
 
         /// <summary>
@@ -1649,7 +1656,7 @@ namespace VedAstro.Library
             var isOccurring = isLordIn6th || isLordIn8th || isLordIn12th;
 
             // Return the result, including the relevant houses and the planet involved
-            return CalculatorResult.New(isOccurring, new HouseName[] { House6, House8, House12 }, new[] { lordOfMercurySign, Mercury }, birthTime);
+            return CalculatorResult.New(isOccurring, [House6, House8, House12], [lordOfMercurySign, Mercury], birthTime);
         }
 
 
@@ -1672,7 +1679,7 @@ namespace VedAstro.Library
             //If Jupiter is in a kendra from the Moon
             var jupiterInKendraFromMoon = Calculate.IsPlanetInKendraFromPlanet(Jupiter, Moon, birthTime);
 
-            return CalculatorResult.New(jupiterInKendraFromMoon, new[] { Jupiter, Moon }, birthTime);
+            return CalculatorResult.New(jupiterInKendraFromMoon, [Jupiter, Moon], birthTime);
         }
 
         /// <summary>
