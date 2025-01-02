@@ -170,6 +170,9 @@ namespace VedAstro.Library
 
         }
         
+        /// <summary>
+        /// Note "Timezone not respected"
+        /// </summary>
         public static async Task<string> UpdatePerson(string ownerId, string personId, Time birthTime, string personName, Gender gender, string notes = "")
         {
             //pack the data
