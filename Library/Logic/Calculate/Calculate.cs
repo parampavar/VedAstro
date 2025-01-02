@@ -208,7 +208,7 @@ namespace VedAstro.Library
             await AzureCache.DeleteCacheRelatedToPerson(personToDelete);
 
             //# add deleted person to recycle bin
-            await AzureTable.PersonListRecycleBin.UpsertEntityAsync(personAzureRow);
+            //await AzureTable.PersonListRecycleBin.UpsertEntityAsync(personAzureRow);
 
             //# do final delete from MAIN DATABASE
             await AzureTable.PersonList.DeleteEntityAsync(ownerId, personId);
