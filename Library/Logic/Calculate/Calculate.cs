@@ -165,7 +165,7 @@ namespace VedAstro.Library
             //creates record if no exist, update if already there
             AzureTable.PersonList.UpsertEntity(newPerson.ToAzureRow());
 
-            //return ID of newly created person so caller can get use it
+            //return ID of newly created person so caller can use it
             return newPerson.Id;
 
         }
