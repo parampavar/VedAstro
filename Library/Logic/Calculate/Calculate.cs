@@ -141,6 +141,37 @@ namespace VedAstro.Library
             return compiledObj;
         }
 
+        public static JObject FindBirthTimeHouseStrengthPerson(Time possibleBirthTime, double precisionHours = 1)
+        {
+            //get list of possible birth time slice in the current birth day
+            var timeSlices = Tools.GetTimeSlicesOnBirthDay(possibleBirthTime, 1);
+
+            //get predictions for each slice and place in out going list  
+            var compiledObj = new JObject();
+            foreach (var timeSlice in timeSlices)
+            {
+                //compile all house strengths into a nice presentable string
+                var finalString = "";
+                foreach (var house in House.AllHouses)
+                {
+                    //get house strength
+                    var strength = Calculate.HouseStrength(house, timeSlice).ToDouble(2);
+
+                    //add to compiled string
+                    var thisHouse = $"{house} {strength},";
+                    finalString += thisHouse;
+                }
+
+                //nicely packed with TIME next to variable data
+                var named = new JProperty(timeSlice.ToString(), finalString);
+                compiledObj.Add(named);
+            }
+
+            //send data back to caller
+            return compiledObj;
+        }
+
+
         #endregion
 
         #region PERSON
