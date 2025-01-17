@@ -53,11 +53,6 @@ namespace VedAstro.Library
 
         #region SETTINGS
 
-        /// <summary>
-        /// updated when calls come in, then when sub calls go out, then are this address is used
-        /// </summary>
-        public static string CurrentServerAddress;
-
 
         /// <summary>
         /// Defaults to RAMAN, but can be set before calling any funcs,
