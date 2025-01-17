@@ -538,11 +538,11 @@ namespace VedAstro.Library
 
         /// <summary>
         /// Gets all events occuring at given time. Basically a slice from "Events Chart"
-        /// Can be used by LLM to interprate final prediction
+        /// Can be used by LLM to interprate final prediction. Also known as Muhurtha
         /// </summary>
-        /// <param name="birthTime"></param>
-        /// <param name="checkTime"></param>
-        /// <param name="eventTagList"></param>
+        /// <param name="birthTime">DOB of person involded in event</param>
+        /// <param name="checkTime">time event will occur</param>
+        /// <param name="eventTagList">tags to select events</param>
         public static List<Event> EventsAtTime(Time birthTime, Time checkTime, List<EventTag> eventTagList)
         {
             // TEMP hack to place time in Person (wrapped) 
@@ -3708,7 +3708,6 @@ namespace VedAstro.Library
             }
 
         }
-
 
         public static double TimeToJulianUniversalTime(Time time)
         {
