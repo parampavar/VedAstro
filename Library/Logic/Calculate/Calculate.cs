@@ -11498,12 +11498,33 @@ namespace VedAstro.Library
         #region CHARA DASA
 
         /// <summary>
-        /// Calculates the Chara Dasha sign at the specified checkTime based on the birthTime.
+        /// Represents a Chara Dasha period with sub-periods.
+        /// </summary>
+        public class DashaPeriod
+        {
+            public ZodiacName SignName { get; set; }
+            public DateTimeOffset StartTime { get; set; }
+            public DateTimeOffset EndTime { get; set; }
+            public List<SubPeriod> SubPeriods { get; set; }
+        }
+
+        /// <summary>
+        /// Represents a sub-period within a Chara Dasha period.
+        /// </summary>
+        public class SubPeriod
+        {
+            public ZodiacName SignName { get; set; }
+            public DateTimeOffset StartTime { get; set; }
+            public DateTimeOffset EndTime { get; set; }
+        }
+
+        /// <summary>
+        /// Calculates the Chara Dasa sign at the specified checkTime based on the birthTime.
         /// </summary>
         /// <param name="birthTime">The birth time of the person.</param>
-        /// <param name="checkTime">The time at which to check the Chara Dasha.</param>
-        /// <returns>The name of the Chara Dasha sign active at the checkTime.</returns>
-        public static ZodiacName GetCharaDasaAtTime(Time birthTime, Time checkTime)
+        /// <param name="checkTime">The time at which to check the Chara Dasa.</param>
+        /// <returns>The name of the Chara Dasha sign active at the checkTime with sub-periods.</returns>
+        public static DashaPeriod GetCharaDasaAtTime(Time birthTime, Time checkTime)
         {
             // Step 1: Determine the Lagna (Ascendant) sign at birth
             var lagnaSign = Calculate.LagnaSignName(birthTime);
@@ -11521,9 +11542,103 @@ namespace VedAstro.Library
             // Step 5: Find the Dasha period active at checkTime
             var activeDasha = dashaPeriods.FirstOrDefault(dp => dp.StartTime <= checkTime.GetLmtDateTimeOffset() && checkTime.GetLmtDateTimeOffset() < dp.EndTime);
 
-            // Return the active Dasha sign
-            return activeDasha?.SignName ?? ZodiacName.Empty;
+            // Step 6: Calculate the sub-periods for the active Dasha period
+            if (activeDasha != null)
+            {
+                var subPeriods = GenerateSubPeriods(activeDasha, birthTime);
+                activeDasha.SubPeriods = subPeriods;
+            }
+
+            return activeDasha;
         }
+
+        /// <summary>
+        /// Generates the sub-periods for a given Chara Dasha period.
+        /// </summary>
+        public static List<SubPeriod> GenerateSubPeriods(DashaPeriod dashaPeriod, Time birthTime)
+        {
+            List<SubPeriod> subPeriods = new List<SubPeriod>();
+            var planetDegrees = GetPlanetDegrees(birthTime);
+
+            // Ninth house from the current Dasha sign
+            var ninthHouse = Calculate.SignCountedFromInputSign(dashaPeriod.SignName, 9);
+
+            // Order type (direct or indirect)
+            var orderType = GetOrderType(ninthHouse);
+
+            // Calculate the sub-periods
+            var totalMonths = (dashaPeriod.EndTime - dashaPeriod.StartTime).TotalDays / 30;
+            var totalDegrees = 360;
+            var subPeriodMonths = (totalMonths * 12) / totalDegrees;
+
+            if (orderType == "direct")
+            {
+                for (int i = 1; i <= 12; i++)
+                {
+                    var subPeriodSign = (ZodiacName)(((int)dashaPeriod.SignName + i - 1) % 12 + 1);
+                    var subPeriodStartTime = dashaPeriod.StartTime.AddMonths((int)((i - 1) * subPeriodMonths));
+                    var subPeriodEndTime = dashaPeriod.StartTime.AddMonths((int)(i * subPeriodMonths));
+
+                    subPeriods.Add(new SubPeriod
+                    {
+                        SignName = subPeriodSign,
+                        StartTime = subPeriodStartTime,
+                        EndTime = subPeriodEndTime
+                    });
+                }
+            }
+            else
+            {
+                for (int i = 1; i <= 12; i++)
+                {
+                    var subPeriodSign = (ZodiacName)(((int)dashaPeriod.SignName - i + 12) % 12 + 1);
+                    var subPeriodStartTime = dashaPeriod.StartTime.AddMonths((int)((i - 1) * subPeriodMonths));
+                    var subPeriodEndTime = dashaPeriod.StartTime.AddMonths((int)(i * subPeriodMonths));
+
+                    subPeriods.Add(new SubPeriod
+                    {
+                        SignName = subPeriodSign,
+                        StartTime = subPeriodStartTime,
+                        EndTime = subPeriodEndTime
+                    });
+                }
+            }
+
+            return subPeriods;
+        }
+
+        /// <summary>
+        /// Determines the order type (direct or indirect) for the sub-periods.
+        /// </summary>
+        public static string GetOrderType(ZodiacName ninthHouse)
+        {
+            // The order type depends on the nature of the 9th house from the current Dasha sign
+            if (ninthHouse == ZodiacName.Aries || ninthHouse == ZodiacName.Taurus || ninthHouse == ZodiacName.Gemini ||
+                ninthHouse == ZodiacName.Libra || ninthHouse == ZodiacName.Scorpio || ninthHouse == ZodiacName.Sagittarius)
+            {
+                return "direct";
+            }
+            else
+            {
+                return "indirect";
+            }
+        }
+
+        /// <summary>
+        /// Gets the degrees of the planets at birth time.
+        /// </summary>
+        private static Dictionary<PlanetName, double> GetPlanetDegrees(Time birthTime)
+        {
+            // Get the degrees of the planets at birth time
+            var planetDegrees = new Dictionary<PlanetName, double>();
+            foreach (var planet in PlanetName.All7Planets)
+            {
+                var planetZodiac = Calculate.PlanetZodiacSign(planet, birthTime);
+                planetDegrees[planet] = planetZodiac.GetDegreesInSign().TotalDegrees;
+            }
+            return planetDegrees;
+        }
+
 
         /// <summary>
         /// Calculates the Chara Dasha order starting from the Lagna sign.
@@ -11638,15 +11753,6 @@ namespace VedAstro.Library
             return dashaPeriods;
         }
 
-        /// <summary>
-        /// Represents a Chara Dasha period.
-        /// </summary>
-        private class DashaPeriod
-        {
-            public ZodiacName SignName { get; set; }
-            public DateTimeOffset StartTime { get; set; }
-            public DateTimeOffset EndTime { get; set; }
-        }
 
         /// <summary>
         /// Calculates the distance between two zodiac signs.
