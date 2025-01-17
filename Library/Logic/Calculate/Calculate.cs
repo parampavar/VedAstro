@@ -195,7 +195,7 @@ namespace VedAstro.Library
             return newPerson.Id;
 
         }
-        
+
         /// <summary>
         /// Note "Timezone not respected"
         /// </summary>
@@ -11492,6 +11492,170 @@ namespace VedAstro.Library
             return occuring;
         }
 
+
+        #endregion
+
+        #region CHARA DASA
+
+        /// <summary>
+        /// Calculates the Chara Dasha sign at the specified checkTime based on the birthTime.
+        /// </summary>
+        /// <param name="birthTime">The birth time of the person.</param>
+        /// <param name="checkTime">The time at which to check the Chara Dasha.</param>
+        /// <returns>The name of the Chara Dasha sign active at the checkTime.</returns>
+        public static ZodiacName GetCharaDasaAtTime(Time birthTime, Time checkTime)
+        {
+            // Step 1: Determine the Lagna (Ascendant) sign at birth
+            var lagnaSign = Calculate.LagnaSignName(birthTime);
+            int lagnaIndex = (int)lagnaSign;
+
+            // Step 2: Calculate the Chara Dasha order starting from the Lagna
+            List<ZodiacName> dashaOrder = CalculateCharaDashaOrder(lagnaSign);
+
+            // Step 3: Calculate the duration of each Dasha period in years
+            Dictionary<ZodiacName, double> dashaYears = CalculateCharaDashaYears(birthTime, dashaOrder);
+
+            // Step 4: Generate the Dasha periods with start and end times
+            List<DashaPeriod> dashaPeriods = GenerateCharaDashaPeriods(birthTime, dashaOrder, dashaYears);
+
+            // Step 5: Find the Dasha period active at checkTime
+            var activeDasha = dashaPeriods.FirstOrDefault(dp => dp.StartTime <= checkTime.GetLmtDateTimeOffset() && checkTime.GetLmtDateTimeOffset() < dp.EndTime);
+
+            // Return the active Dasha sign
+            return activeDasha?.SignName ?? ZodiacName.Empty;
+        }
+
+        /// <summary>
+        /// Calculates the Chara Dasha order starting from the Lagna sign.
+        /// </summary>
+        private static List<ZodiacName> CalculateCharaDashaOrder(ZodiacName lagnaSign)
+        {
+            // Determine the order type based on Lagna sign
+            var orderType = GetCharaDashaOrderType(lagnaSign);
+
+            // Generate the Dasha order
+            List<ZodiacName> dashaOrder = new List<ZodiacName>();
+            if (orderType == "direct")
+            {
+                // Direct motion through zodiac signs
+                for (int i = 0; i < 12; i++)
+                {
+                    var sign = (ZodiacName)(((int)lagnaSign + i - 1) % 12 + 1);
+                    dashaOrder.Add(sign);
+                }
+            }
+            else
+            {
+                // Reverse motion through zodiac signs
+                for (int i = 0; i < 12; i++)
+                {
+                    var sign = (ZodiacName)(((int)lagnaSign - i - 1 + 12) % 12 + 1);
+                    dashaOrder.Add(sign);
+                }
+            }
+            return dashaOrder;
+        }
+
+        /// <summary>
+        /// Determines the order type (direct or indirect) for Chara Dasha based on Lagna sign.
+        /// </summary>
+        private static string GetCharaDashaOrderType(ZodiacName lagnaSign)
+        {
+            // The order type depends on the nature of the 9th house from Lagna
+            var ninthHouseSign = Calculate.SignCountedFromInputSign(lagnaSign, 9);
+            if (ninthHouseSign == ZodiacName.Aries || ninthHouseSign == ZodiacName.Taurus || ninthHouseSign == ZodiacName.Gemini ||
+                ninthHouseSign == ZodiacName.Libra || ninthHouseSign == ZodiacName.Scorpio || ninthHouseSign == ZodiacName.Sagittarius)
+            {
+                return "direct";
+            }
+            else
+            {
+                return "indirect";
+            }
+        }
+
+        /// <summary>
+        /// Calculates the duration of each Chara Dasha period in years.
+        /// </summary>
+        private static Dictionary<ZodiacName, double> CalculateCharaDashaYears(Time birthTime, List<ZodiacName> dashaOrder)
+        {
+            Dictionary<ZodiacName, double> dashaYears = new Dictionary<ZodiacName, double>();
+
+            foreach (var sign in dashaOrder)
+            {
+                // Calculate the duration for each sign
+                double years = CalculateCharaDashaDurationForSign(birthTime, sign);
+                dashaYears[sign] = years;
+            }
+
+            return dashaYears;
+        }
+
+        /// <summary>
+        /// Calculates the duration of the Chara Dasha period for a particular sign.
+        /// </summary>
+        private static double CalculateCharaDashaDurationForSign(Time birthTime, ZodiacName sign)
+        {
+            // Get the lord of the sign
+            var lord = Calculate.LordOfZodiacSign(sign);
+
+            // Get the position of the lord
+            var lordSign = Calculate.PlanetZodiacSign(lord, birthTime).GetSignName();
+
+            // Calculate the distance between the signs
+            int distance = Calculate.GetSignDistance(sign, lordSign);
+            if (distance == 0)
+            {
+                distance = 12;
+            }
+
+            return distance;
+        }
+
+        /// <summary>
+        /// Generates the Chara Dasha periods with start and end times.
+        /// </summary>
+        private static List<DashaPeriod> GenerateCharaDashaPeriods(Time birthTime, List<ZodiacName> dashaOrder, Dictionary<ZodiacName, double> dashaYears)
+        {
+            List<DashaPeriod> dashaPeriods = new List<DashaPeriod>();
+            var currentTime = birthTime.GetLmtDateTimeOffset();
+
+            foreach (var sign in dashaOrder)
+            {
+                double years = dashaYears[sign];
+                var endTime = currentTime.AddYears((int)years).AddMonths((int)((years - (int)years) * 12));
+
+                dashaPeriods.Add(new DashaPeriod
+                {
+                    SignName = sign,
+                    StartTime = currentTime,
+                    EndTime = endTime
+                });
+
+                currentTime = endTime;
+            }
+
+            return dashaPeriods;
+        }
+
+        /// <summary>
+        /// Represents a Chara Dasha period.
+        /// </summary>
+        private class DashaPeriod
+        {
+            public ZodiacName SignName { get; set; }
+            public DateTimeOffset StartTime { get; set; }
+            public DateTimeOffset EndTime { get; set; }
+        }
+
+        /// <summary>
+        /// Calculates the distance between two zodiac signs.
+        /// </summary>
+        private static int GetSignDistance(ZodiacName fromSign, ZodiacName toSign)
+        {
+            int distance = ((int)toSign - (int)fromSign + 12) % 12;
+            return distance == 0 ? 12 : distance;
+        }
 
         #endregion
 
