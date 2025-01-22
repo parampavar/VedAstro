@@ -301,6 +301,38 @@ namespace VedAstro.Library
         }
 
         /// <summary>
+        /// Generates hash to verify if list client has is up to date
+        /// </summary>
+        public static async Task<string> GetPersonListHash(string ownerId, string visitorId = "")
+        {
+            // Call GetPersonList to get the list of persons
+            var personList = await GetPersonList(ownerId, visitorId);
+
+            // Initialize a string to hold the concatenated data
+            var concatenatedData = string.Empty;
+
+            // Concatenate the data of all persons in the list
+            foreach (var person in personList)
+            {
+                concatenatedData += person["PersonId"].ToString() +
+                                    person["Name"].ToString() +
+                                    person["BirthTime"].ToString() +
+                                    person["Notes"].ToString();
+            }
+
+            // Generate a SHA256 hash of the concatenated data
+            using var sha256 = System.Security.Cryptography.SHA256.Create();
+            var bytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(concatenatedData));
+
+            // Convert the hash to a hexadecimal string
+            var hash = BitConverter.ToString(bytes).Replace("-", "").ToLowerInvariant();
+
+            return hash;
+        }
+
+
+
+        /// <summary>
         /// Given a person id will get person's data, owner id is needed for privacy protection
         /// </summary>
         public static async Task<Person> GetPerson(string ownerId, string personId)
