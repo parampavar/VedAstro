@@ -178,6 +178,9 @@ namespace VedAstro.Library
         /// </summary>
         public static async Task<string> AddPerson(string ownerId, Time birthTime, string personName, Gender gender, string notes = "", bool failIfDuplicate = false)
         {
+            //don't allow add for public person's
+            if (ownerId == "101") { throw new Exception("You can not add/edit public profiles with ID 101"); }
+
             //special ID made for human brains 🧠 (unique in whole DB)
             var brandNewHumanReadyId = await PersonManagerTools.GeneratePersonId(ownerId, personName, birthTime.StdYearText, failIfDuplicate);
 
@@ -201,6 +204,9 @@ namespace VedAstro.Library
         /// </summary>
         public static async Task<string> UpdatePerson(string ownerId, string personId, Time birthTime, string personName, Gender gender, string notes = "")
         {
+            //don't allow add for public person's
+            if (ownerId == "101") { throw new Exception("You can not add/edit public profiles with ID 101"); }
+
             //pack the data
             var personParsed = new Person(ownerId, personId, personName, birthTime, gender, notes);
 
