@@ -268,6 +268,7 @@ namespace VedAstro.Library
             //send to caller
             return personJsonList;
 
+            //------LOCAL FUNCS-----------
 
             async Task SwapUserId(string ownerId, string visitorId)
             {
@@ -329,8 +330,6 @@ namespace VedAstro.Library
 
             return hash;
         }
-
-
 
         /// <summary>
         /// Given a person id will get person's data, owner id is needed for privacy protection
