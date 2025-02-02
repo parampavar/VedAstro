@@ -289,7 +289,7 @@ namespace VedAstro.Library
             var yoga1A = MoonAshtakavargaYoga1A(birthTime).Occuring;
 
             //two or three planets join the Moon,
-            var moonSign = Calculate.PlanetZodiacSign(Moon, birthTime);
+            var moonSign = Calculate.PlanetRasiD1Sign(Moon, birthTime);
             //all planets in same sign as moon
             var planetsWithMoon = Calculate.PlanetsInSign(moonSign.GetSignName(), birthTime);
             //do not count moon
@@ -714,8 +714,8 @@ namespace VedAstro.Library
 
             // Condition B: Mars is in Lagna, or Chandra Lagna, or in the 10th or 9th
             var marsInLagna = Calculate.IsPlanetInHouse(Mars, House1, birthTime);
-            var marsSign = Calculate.PlanetZodiacSign(Mars, birthTime).GetSignName();
-            var moonSign = Calculate.PlanetZodiacSign(Moon, birthTime).GetSignName();
+            var marsSign = Calculate.PlanetRasiD1Sign(Mars, birthTime).GetSignName();
+            var moonSign = Calculate.PlanetRasiD1Sign(Moon, birthTime).GetSignName();
             var marsInChandraLagna = marsSign == moonSign;
             //NOTE: book does not say "from Moon", infered based on tests in 
             // Check if Mars occupies the 9th house from Moon
@@ -894,15 +894,15 @@ namespace VedAstro.Library
             var lordOf3rd = Calculate.LordOfHouse(House3, birthTime);
 
             // Check if the lord of the 3rd is in an even sign
-            var lordOf3rdSign = Calculate.PlanetZodiacSign(lordOf3rd, birthTime).GetSignName();
+            var lordOf3rdSign = Calculate.PlanetRasiD1Sign(lordOf3rd, birthTime).GetSignName();
             var lordOf3rdInEvenSign = Calculate.IsEvenSign(lordOf3rdSign);
 
             // Lord of the sign occupied by Karaka (Mars)
-            var marsSign = Calculate.PlanetZodiacSign(Mars, birthTime).GetSignName();
+            var marsSign = Calculate.PlanetRasiD1Sign(Mars, birthTime).GetSignName();
             var lordOfMarsSign = Calculate.LordOfZodiacSign(marsSign);
 
             // Check if the lord of Mars's sign is in an even sign
-            var lordOfMarsSignSign = Calculate.PlanetZodiacSign(lordOfMarsSign, birthTime).GetSignName();
+            var lordOfMarsSignSign = Calculate.PlanetRasiD1Sign(lordOfMarsSign, birthTime).GetSignName();
             var lordOfMarsSignInEvenSign = Calculate.IsEvenSign(lordOfMarsSignSign);
 
             var condition2 = lordOf3rdInEvenSign || lordOfMarsSignInEvenSign;
@@ -942,15 +942,15 @@ namespace VedAstro.Library
             var lordOf3rd = Calculate.LordOfHouse(House3, birthTime);
 
             // Check if the lord of the 3rd is in an odd sign
-            var lordOf3rdSign = Calculate.PlanetZodiacSign(lordOf3rd, birthTime).GetSignName();
+            var lordOf3rdSign = Calculate.PlanetRasiD1Sign(lordOf3rd, birthTime).GetSignName();
             var lordOf3rdInOddSign = Calculate.IsOddSign(lordOf3rdSign);
 
             // Lord of the sign occupied by Karaka (Mars)
-            var marsSign = Calculate.PlanetZodiacSign(Mars, birthTime).GetSignName();
+            var marsSign = Calculate.PlanetRasiD1Sign(Mars, birthTime).GetSignName();
             var lordOfMarsSign = Calculate.LordOfZodiacSign(marsSign);
 
             // Check if the lord of Mars's sign is in an odd sign
-            var lordOfMarsSignSign = Calculate.PlanetZodiacSign(lordOfMarsSign, birthTime).GetSignName();
+            var lordOfMarsSignSign = Calculate.PlanetRasiD1Sign(lordOfMarsSign, birthTime).GetSignName();
             var lordOfMarsSignInOddSign = Calculate.IsOddSign(lordOfMarsSignSign);
 
             var condition2 = lordOf3rdInOddSign || lordOfMarsSignInOddSign;
@@ -976,7 +976,7 @@ namespace VedAstro.Library
             var ascendantSign = Calculate.LagnaSignName(birthTime);
 
             // Get Saturn's sign
-            var saturnSign = Calculate.PlanetZodiacSign(Saturn, birthTime).GetSignName();
+            var saturnSign = Calculate.PlanetRasiD1Sign(Saturn, birthTime).GetSignName();
 
             // Option A:
             // If the ascendant is a movable sign
@@ -1052,7 +1052,7 @@ namespace VedAstro.Library
             var saturnHas5Bindus = saturnBindus >= 5;
 
             // Condition C: Saturn is in a movable or fixed sign
-            var saturnSign = Calculate.PlanetZodiacSign(Saturn, birthTime).GetSignName();
+            var saturnSign = Calculate.PlanetRasiD1Sign(Saturn, birthTime).GetSignName();
             var saturnInMovableSign = Calculate.IsMovableSign(saturnSign);
             var saturnInFixedSign = Calculate.IsFixedSign(saturnSign);
             var saturnInMovableOrFixedSign = saturnInMovableSign || saturnInFixedSign;
@@ -1078,7 +1078,7 @@ namespace VedAstro.Library
             var lordOf3rd = Calculate.LordOfHouse(House3, birthTime);
 
             // The 3rd lord is in a common sign
-            var lordOf3rdSign = Calculate.PlanetZodiacSign(lordOf3rd, birthTime).GetSignName();
+            var lordOf3rdSign = Calculate.PlanetRasiD1Sign(lordOf3rd, birthTime).GetSignName();
             var isLordOf3rdInCommonSign = Calculate.IsCommonSign(lordOf3rdSign);
 
             // The 3rd lord has minimum 5 bindus in Mars Ashtakavarga
@@ -1259,7 +1259,7 @@ namespace VedAstro.Library
         public static CalculatorResult MarsAshtakavargaYoga22(Time birthTime)
         {
             // Get the sign Mars is in
-            var marsSign = Calculate.PlanetZodiacSign(Mars, birthTime).GetSignName();
+            var marsSign = Calculate.PlanetRasiD1Sign(Mars, birthTime).GetSignName();
 
             // Check if Mars is in Sagittarius, Aries, or Capricorn
             var requiredSigns = new[] { ZodiacName.Sagittarius, ZodiacName.Aries, ZodiacName.Capricorn };
@@ -1580,7 +1580,7 @@ namespace VedAstro.Library
             bool mercuryHas4Bindus = mercuryBindus >= 4;
 
             // Get Mercury's sign
-            var mercurySign = Calculate.PlanetZodiacSign(Mercury, birthTime).GetSignName();
+            var mercurySign = Calculate.PlanetRasiD1Sign(Mercury, birthTime).GetSignName();
 
             // Get the lord of Mercury's sign
             var mercurySignLord = Calculate.LordOfZodiacSign(mercurySign);
@@ -1614,7 +1614,7 @@ namespace VedAstro.Library
         public static CalculatorResult MercuryAshtakavargaYoga12A(Time birthTime)
         {
             // Get the sign occupied by Mercury
-            var mercurySign = Calculate.PlanetZodiacSign(Mercury, birthTime).GetSignName();
+            var mercurySign = Calculate.PlanetRasiD1Sign(Mercury, birthTime).GetSignName();
 
             // Get the lord of Mercury's sign
             var mercurySignLord = Calculate.LordOfZodiacSign(mercurySign);
@@ -1644,7 +1644,7 @@ namespace VedAstro.Library
         public static CalculatorResult MercuryAshtakavargaYoga12B(Time birthTime)
         {
             // Get the sign occupied by Mercury
-            var mercurySign = Calculate.PlanetZodiacSign(Mercury, birthTime).GetSignName();
+            var mercurySign = Calculate.PlanetRasiD1Sign(Mercury, birthTime).GetSignName();
 
             // Get the lord of the sign occupied by Mercury
             var lordOfMercurySign = Calculate.LordOfZodiacSign(mercurySign);
@@ -2044,7 +2044,6 @@ namespace VedAstro.Library
 
             // Check if planets other than the Moon occupy the 2nd house from the Sun
             var planetsIn2ndHouse = Calculate.PlanetsInSign(secondHouseFromSun, birthTime);
-            //var moonSign = Calculate.SignCountedFromPlanetSign(0, PlanetName.Moon, birthTime);
 
             // Check if any planet except Moon is in 2nd house
             var isOccuring = planetsIn2ndHouse.Any(p => p != Moon);
@@ -2058,9 +2057,24 @@ namespace VedAstro.Library
         [HoroscopeCalculator(HoroscopeName.VasiYoga)]
         public static CalculatorResult VasiYoga(Time birthTime)
         {
-            return CalculatorResult.New(false);
+            // Get the 12th house from the Sun
+            var twelfthHouseFromSun = Calculate.SignCountedFromPlanetSign(12, Sun, birthTime);
+
+            // Get planets in the 12th house from the Sun
+            var planetsIn12thHouse = Calculate.PlanetsInSign(twelfthHouseFromSun, birthTime);
+
+            // Check if any planet other than the Moon is in the 12th house
+            bool isOccurring = planetsIn12thHouse.Any(p => p != Moon);
+
+            // Return the result
+            return CalculatorResult.New(isOccurring, [House12], planetsIn12thHouse.Where(p => p != Moon).ToArray(), birthTime);
         }
 
+        /// <summary>
+        /// If planets other than the Moon are
+        /// present on either side of the Sun, Obhayachari is
+        /// caused
+        /// </summary>
         [HoroscopeCalculator(HoroscopeName.ObhayachariYoga)]
         public static CalculatorResult ObhayachariYoga(Time birthTime)
         {
@@ -2711,51 +2725,51 @@ namespace VedAstro.Library
         #region Lord of 1st being Situated in Different Houses
 
         [HoroscopeCalculator(HoroscopeName.House1LordInHouse1Fortified)]
-        public static CalculatorResult House1LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House1, House1, time),
+        public static CalculatorResult House1LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House1, House1, time),
             [House1, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House1LordInHouse2)]
-        public static CalculatorResult House1LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House1, House2, time),
+        public static CalculatorResult House1LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House1, House2, time),
             [House1, House2], time);
 
         [HoroscopeCalculator(HoroscopeName.House1LordInHouse3)]
-        public static CalculatorResult House1LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House1, House3, time),
+        public static CalculatorResult House1LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House1, House3, time),
             [House1, House3], time);
 
         [HoroscopeCalculator(HoroscopeName.House1LordInHouse4)]
-        public static CalculatorResult House1LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House1, House4, time),
+        public static CalculatorResult House1LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House1, House4, time),
             [House1, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House1LordInHouse5)]
-        public static CalculatorResult House1LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House1, House5, time),
+        public static CalculatorResult House1LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House1, House5, time),
             [House1, House5], time);
 
         [HoroscopeCalculator(HoroscopeName.House1LordInHouse6)]
-        public static CalculatorResult House1LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House1, House6, time),
+        public static CalculatorResult House1LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House1, House6, time),
             [House1, House6], time);
 
         [HoroscopeCalculator(HoroscopeName.House1LordInHouse7)]
-        public static CalculatorResult House1LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House1, House7, time),
+        public static CalculatorResult House1LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House1, House7, time),
             [House1, House7], time);
 
         [HoroscopeCalculator(HoroscopeName.House1LordInHouse8)]
-        public static CalculatorResult House1LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House1, House8, time),
+        public static CalculatorResult House1LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House1, House8, time),
             [House1, House8], time);
 
         [HoroscopeCalculator(HoroscopeName.House1LordInHouse9)]
-        public static CalculatorResult House1LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House1, House9, time),
+        public static CalculatorResult House1LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House1, House9, time),
             [House1, House9], time);
 
         [HoroscopeCalculator(HoroscopeName.House1LordInHouse10)]
-        public static CalculatorResult House1LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House1, House10, time),
+        public static CalculatorResult House1LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House1, House10, time),
             [House1, House10], time);
 
         [HoroscopeCalculator(HoroscopeName.House1LordInHouse11)]
-        public static CalculatorResult House1LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House1, House11, time),
+        public static CalculatorResult House1LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House1, House11, time),
             [House1, House11], time);
 
         [HoroscopeCalculator(HoroscopeName.House1LordInHouse12)]
-        public static CalculatorResult House1LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House1, House12, time),
+        public static CalculatorResult House1LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House1, House12, time),
             [House1, House12], time);
 
         #endregion
@@ -2763,71 +2777,71 @@ namespace VedAstro.Library
         #region Lord of 2nd being Situated in Different Houses
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse1)]
-        public static CalculatorResult House2LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House1, time),
+        public static CalculatorResult House2LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House1, time),
             [House2, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse1With9thOrSun)]
-        public static CalculatorResult House2LordInHouse1With9thOrSun(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House1, time),
+        public static CalculatorResult House2LordInHouse1With9thOrSun(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House1, time),
             [House2, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse2)]
-        public static CalculatorResult House2LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House2, time),
+        public static CalculatorResult House2LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House2, time),
             [House2, House2], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse3)]
-        public static CalculatorResult House2LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House3, time),
+        public static CalculatorResult House2LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House3, time),
             [House2, House3], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse4)]
-        public static CalculatorResult House2LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House4, time),
+        public static CalculatorResult House2LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House4, time),
             [House2, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse4Afflicted)]
-        public static CalculatorResult House2LordInHouse4Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House4, time),
+        public static CalculatorResult House2LordInHouse4Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House4, time),
             [House2, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse4Fortified)]
-        public static CalculatorResult House2LordInHouse4Fortified(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House4, time),
+        public static CalculatorResult House2LordInHouse4Fortified(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House4, time),
             [House2, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse5)]
-        public static CalculatorResult House2LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House5, time),
+        public static CalculatorResult House2LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House5, time),
             [House2, House5], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse6Fortified)]
-        public static CalculatorResult House2LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House6, time),
+        public static CalculatorResult House2LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House6, time),
             [House2, House6], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse6Afflicted)]
-        public static CalculatorResult House2LordInHouse6Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House6, time),
+        public static CalculatorResult House2LordInHouse6Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House6, time),
             [House2, House6], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse7)]
-        public static CalculatorResult House2LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House7, time),
+        public static CalculatorResult House2LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House7, time),
             [House2, House7], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse8)]
-        public static CalculatorResult House2LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House8, time),
+        public static CalculatorResult House2LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House8, time),
             [House2, House8], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse9)]
-        public static CalculatorResult House2LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House9, time),
+        public static CalculatorResult House2LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House9, time),
             [House2, House9], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse10)]
-        public static CalculatorResult House2LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House10, time),
+        public static CalculatorResult House2LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House10, time),
             [House2, House10], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse11)]
-        public static CalculatorResult House2LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House11, time),
+        public static CalculatorResult House2LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House11, time),
             [House2, House11], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse12)]
-        public static CalculatorResult House2LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House12, time),
+        public static CalculatorResult House2LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House12, time),
             [House2, House12], time);
 
         [HoroscopeCalculator(HoroscopeName.House2LordInHouse12Afflicted)]
-        public static CalculatorResult House2LordInHouse12Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House2, House12, time),
+        public static CalculatorResult House2LordInHouse12Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House2, House12, time),
             [House2, House12], time);
 
         #endregion
@@ -2835,71 +2849,71 @@ namespace VedAstro.Library
         #region Lord of 3rd being Situated in Different Houses
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse1)]
-        public static CalculatorResult House3LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House1, time),
+        public static CalculatorResult House3LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House1, time),
             [House3, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse2)]
-        public static CalculatorResult House3LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House2, time),
+        public static CalculatorResult House3LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House2, time),
             [House3, House2], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse3)]
-        public static CalculatorResult House3LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House3, time),
+        public static CalculatorResult House3LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House3, time),
             [House3, House3], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse4)]
-        public static CalculatorResult House3LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House4, time),
+        public static CalculatorResult House3LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House4, time),
             [House3, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse4Fortified)]
-        public static CalculatorResult House3LordInHouse4Fortified(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House4, time),
+        public static CalculatorResult House3LordInHouse4Fortified(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House4, time),
             [House3, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse4WeakMars)]
-        public static CalculatorResult House3LordInHouse4WeakMars(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House4, time),
+        public static CalculatorResult House3LordInHouse4WeakMars(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House4, time),
             [House3, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse4Strong9th)]
-        public static CalculatorResult House3LordInHouse4Strong9th(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House4, time),
+        public static CalculatorResult House3LordInHouse4Strong9th(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House4, time),
             [House3, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse5)]
-        public static CalculatorResult House3LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House5, time),
+        public static CalculatorResult House3LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House5, time),
             [House3, House5], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse6)]
-        public static CalculatorResult House3LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House6, time),
+        public static CalculatorResult House3LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House6, time),
             [House3, House6], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse6Lord3rd)]
-        public static CalculatorResult House3LordInHouse6Lord3rd(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House6, time),
+        public static CalculatorResult House3LordInHouse6Lord3rd(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House6, time),
             [House3, House6], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse6Lord3rdAfflicted)]
-        public static CalculatorResult House3LordInHouse6Lord3rdAfflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House6, time),
+        public static CalculatorResult House3LordInHouse6Lord3rdAfflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House6, time),
             [House3, House6], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse7)]
-        public static CalculatorResult House3LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House7, time),
+        public static CalculatorResult House3LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House7, time),
             [House3, House7], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse8)]
-        public static CalculatorResult House3LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House8, time),
+        public static CalculatorResult House3LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House8, time),
             [House3, House8], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse9)]
-        public static CalculatorResult House3LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House9, time),
+        public static CalculatorResult House3LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House9, time),
             [House3, House9], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse10)]
-        public static CalculatorResult House3LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House10, time),
+        public static CalculatorResult House3LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House10, time),
             [House3, House10], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse11)]
-        public static CalculatorResult House3LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House11, time),
+        public static CalculatorResult House3LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House11, time),
             [House3, House11], time);
 
         [HoroscopeCalculator(HoroscopeName.House3LordInHouse12)]
-        public static CalculatorResult House3LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House3, House12, time),
+        public static CalculatorResult House3LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House3, House12, time),
             [House3, House12], time);
 
         #endregion
@@ -2907,55 +2921,55 @@ namespace VedAstro.Library
         #region Lord of the 4th House Occupying Different Houses
 
         [HoroscopeCalculator(HoroscopeName.House4LordInHouse1)]
-        public static CalculatorResult House4LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House4, House1, time),
+        public static CalculatorResult House4LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House4, House1, time),
             [House4, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House4LordInHouse2)]
-        public static CalculatorResult House4LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House4, House2, time),
+        public static CalculatorResult House4LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House4, House2, time),
             [House4, House2], time);
 
         [HoroscopeCalculator(HoroscopeName.House4LordInHouse3)]
-        public static CalculatorResult House4LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House4, House3, time),
+        public static CalculatorResult House4LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House4, House3, time),
             [House4, House3], time);
 
         [HoroscopeCalculator(HoroscopeName.House4LordInHouse4)]
-        public static CalculatorResult House4LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House4, House4, time),
+        public static CalculatorResult House4LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House4, House4, time),
             [House4, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House4LordInHouse5)]
-        public static CalculatorResult House4LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House4, House5, time),
+        public static CalculatorResult House4LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House4, House5, time),
             [House4, House5], time);
 
         [HoroscopeCalculator(HoroscopeName.House4LordInHouse6)]
-        public static CalculatorResult House4LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House4, House6, time),
+        public static CalculatorResult House4LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House4, House6, time),
             [House4, House6], time);
 
         [HoroscopeCalculator(HoroscopeName.House4LordInHouse7)]
-        public static CalculatorResult House4LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House4, House7, time),
+        public static CalculatorResult House4LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House4, House7, time),
             [House4, House7], time);
 
         [HoroscopeCalculator(HoroscopeName.House4LordInHouse8)]
-        public static CalculatorResult House4LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House4, House8, time),
+        public static CalculatorResult House4LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House4, House8, time),
             [House4, House8], time);
 
         [HoroscopeCalculator(HoroscopeName.House4LordInHouse9)]
-        public static CalculatorResult House4LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House4, House9, time),
+        public static CalculatorResult House4LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House4, House9, time),
             [House4, House9], time);
 
         [HoroscopeCalculator(HoroscopeName.House4LordInHouse10)]
-        public static CalculatorResult House4LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House4, House10, time),
+        public static CalculatorResult House4LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House4, House10, time),
             [House4, House10], time);
 
         [HoroscopeCalculator(HoroscopeName.House4LordInHouse10Afflicted)]
-        public static CalculatorResult House4LordInHouse10Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House4, House10, time),
+        public static CalculatorResult House4LordInHouse10Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House4, House10, time),
             [House4, House10], time);
 
         [HoroscopeCalculator(HoroscopeName.House4LordInHouse11)]
-        public static CalculatorResult House4LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House4, House11, time),
+        public static CalculatorResult House4LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House4, House11, time),
             [House4, House11], time);
 
         [HoroscopeCalculator(HoroscopeName.House4LordInHouse12)]
-        public static CalculatorResult House4LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House4, House12, time),
+        public static CalculatorResult House4LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House4, House12, time),
             [House4, House12], time);
 
         #endregion
@@ -2963,67 +2977,67 @@ namespace VedAstro.Library
         #region Lord of the 5th House Occupying Different Houses
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse1Fortified)]
-        public static CalculatorResult House5LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House1, time),
+        public static CalculatorResult House5LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House1, time),
             [House5, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse1Afflicted)]
-        public static CalculatorResult House5LordInHouse1Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House1, time),
+        public static CalculatorResult House5LordInHouse1Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House1, time),
             [House5, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse1AfflictedModerate)]
-        public static CalculatorResult House5LordInHouse1AfflictedModerate(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House1, time),
+        public static CalculatorResult House5LordInHouse1AfflictedModerate(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House1, time),
             [House5, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse2)]
-        public static CalculatorResult House5LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House2, time),
+        public static CalculatorResult House5LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House2, time),
             [House5, House2], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse3Fortified)]
-        public static CalculatorResult House5LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House3, time),
+        public static CalculatorResult House5LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House3, time),
             [House5, House3], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse3Afflicted)]
-        public static CalculatorResult House5LordInHouse3Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House3, time),
+        public static CalculatorResult House5LordInHouse3Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House3, time),
             [House5, House3], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse4)]
-        public static CalculatorResult House5LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House4, time),
+        public static CalculatorResult House5LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House4, time),
             [House5, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse5)]
-        public static CalculatorResult House5LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House5, time),
+        public static CalculatorResult House5LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House5, time),
             [House5, House5], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse6)]
-        public static CalculatorResult House5LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House6, time),
+        public static CalculatorResult House5LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House6, time),
             [House5, House6], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse7)]
-        public static CalculatorResult House5LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House7, time),
+        public static CalculatorResult House5LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House7, time),
             [House5, House7], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse8)]
-        public static CalculatorResult House5LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House8, time),
+        public static CalculatorResult House5LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House8, time),
             [House5, House8], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse9)]
-        public static CalculatorResult House5LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House9, time),
+        public static CalculatorResult House5LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House9, time),
             [House5, House9], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse9Afflicted)]
-        public static CalculatorResult House5LordInHouse9Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House9, time),
+        public static CalculatorResult House5LordInHouse9Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House9, time),
             [House5, House9], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse10)]
-        public static CalculatorResult House5LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House10, time),
+        public static CalculatorResult House5LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House10, time),
             [House5, House10], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse11)]
-        public static CalculatorResult House5LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House11, time),
+        public static CalculatorResult House5LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House11, time),
             [House5, House11], time);
 
         [HoroscopeCalculator(HoroscopeName.House5LordInHouse12)]
-        public static CalculatorResult House5LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House5, House12, time),
+        public static CalculatorResult House5LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House5, House12, time),
             [House5, House12], time);
 
         #endregion
@@ -3031,55 +3045,55 @@ namespace VedAstro.Library
         #region Lord of the 6th House Occupying Different Houses
 
         [HoroscopeCalculator(HoroscopeName.House6LordInHouse1Fortified)]
-        public static CalculatorResult House6LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House6, House1, time),
+        public static CalculatorResult House6LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House6, House1, time),
             [House6, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House6LordInHouse1Afflicted)]
-        public static CalculatorResult House6LordInHouse1Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House6, House1, time),
+        public static CalculatorResult House6LordInHouse1Afflicted(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House6, House1, time),
             [House6, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House6LordInHouse2)]
-        public static CalculatorResult House6LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House6, House2, time),
+        public static CalculatorResult House6LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House6, House2, time),
             [House6, House2], time);
 
         [HoroscopeCalculator(HoroscopeName.House6LordInHouse3)]
-        public static CalculatorResult House6LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House6, House3, time),
+        public static CalculatorResult House6LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House6, House3, time),
             [House6, House3], time);
 
         [HoroscopeCalculator(HoroscopeName.House6LordInHouse4)]
-        public static CalculatorResult House6LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House6, House4, time),
+        public static CalculatorResult House6LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House6, House4, time),
             [House6, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House6LordInHouse5)]
-        public static CalculatorResult House6LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House6, House5, time),
+        public static CalculatorResult House6LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House6, House5, time),
             [House6, House5], time);
 
         [HoroscopeCalculator(HoroscopeName.House6LordInHouse6)]
-        public static CalculatorResult House6LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House6, House6, time),
+        public static CalculatorResult House6LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House6, House6, time),
             [House6, House6], time);
 
         [HoroscopeCalculator(HoroscopeName.House6LordInHouse7)]
-        public static CalculatorResult House6LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House6, House7, time),
+        public static CalculatorResult House6LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House6, House7, time),
             [House6, House7], time);
 
         [HoroscopeCalculator(HoroscopeName.House6LordInHouse8)]
-        public static CalculatorResult House6LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House6, House8, time),
+        public static CalculatorResult House6LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House6, House8, time),
             [House6, House8], time);
 
         [HoroscopeCalculator(HoroscopeName.House6LordInHouse9)]
-        public static CalculatorResult House6LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House6, House9, time),
+        public static CalculatorResult House6LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House6, House9, time),
             [House6, House9], time);
 
         [HoroscopeCalculator(HoroscopeName.House6LordInHouse10)]
-        public static CalculatorResult House6LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House6, House10, time),
+        public static CalculatorResult House6LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House6, House10, time),
             [House6, House10], time);
 
         [HoroscopeCalculator(HoroscopeName.House6LordInHouse11)]
-        public static CalculatorResult House6LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House6, House11, time),
+        public static CalculatorResult House6LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House6, House11, time),
             [House6, House11], time);
 
         [HoroscopeCalculator(HoroscopeName.House6LordInHouse12)]
-        public static CalculatorResult House6LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House6, House12, time),
+        public static CalculatorResult House6LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House6, House12, time),
             [House6, House12], time);
 
         #endregion
@@ -3087,40 +3101,40 @@ namespace VedAstro.Library
         #region Lord of the 7th House Occupying Different Houses
 
         [HoroscopeCalculator(HoroscopeName.House7LordInHouse1)]
-        public static CalculatorResult House7LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House7, House1, time),
+        public static CalculatorResult House7LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House7, House1, time),
             [House7, House1], time);
         [HoroscopeCalculator(HoroscopeName.House7LordInHouse2)]
-        public static CalculatorResult House7LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House7, House2, time),
+        public static CalculatorResult House7LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House7, House2, time),
             [House7, House2], time);
         [HoroscopeCalculator(HoroscopeName.House7LordInHouse3)]
-        public static CalculatorResult House7LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House7, House3, time),
+        public static CalculatorResult House7LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House7, House3, time),
             [House7, House3], time);
         [HoroscopeCalculator(HoroscopeName.House7LordInHouse4)]
-        public static CalculatorResult House7LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House7, House4, time),
+        public static CalculatorResult House7LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House7, House4, time),
             [House7, House4], time);
         [HoroscopeCalculator(HoroscopeName.House7LordInHouse5)]
-        public static CalculatorResult House7LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House7, House5, time),
+        public static CalculatorResult House7LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House7, House5, time),
             [House7, House5], time);
         [HoroscopeCalculator(HoroscopeName.House7LordInHouse6)]
-        public static CalculatorResult House7LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House7, House6, time),
+        public static CalculatorResult House7LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House7, House6, time),
             [House7, House6], time);
         [HoroscopeCalculator(HoroscopeName.House7LordInHouse7)]
-        public static CalculatorResult House7LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House7, House7, time),
+        public static CalculatorResult House7LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House7, House7, time),
             [House7, House7], time);
         [HoroscopeCalculator(HoroscopeName.House7LordInHouse8)]
-        public static CalculatorResult House7LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House7, House8, time),
+        public static CalculatorResult House7LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House7, House8, time),
             [House7, House8], time);
         [HoroscopeCalculator(HoroscopeName.House7LordInHouse9)]
-        public static CalculatorResult House7LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House7, House9, time),
+        public static CalculatorResult House7LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House7, House9, time),
             [House7, House9], time);
         [HoroscopeCalculator(HoroscopeName.House7LordInHouse10)]
-        public static CalculatorResult House7LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House7, House10, time),
+        public static CalculatorResult House7LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House7, House10, time),
             [House7, House10], time);
         [HoroscopeCalculator(HoroscopeName.House7LordInHouse11)]
-        public static CalculatorResult House7LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House7, House11, time),
+        public static CalculatorResult House7LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House7, House11, time),
             [House7, House11], time);
         [HoroscopeCalculator(HoroscopeName.House7LordInHouse12)]
-        public static CalculatorResult House7LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House7, House12, time),
+        public static CalculatorResult House7LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House7, House12, time),
             [House7, House12], time);
 
         #endregion
@@ -3128,51 +3142,51 @@ namespace VedAstro.Library
         #region Lord of the 8th House Occupying Different Houses
 
         [HoroscopeCalculator(HoroscopeName.House8LordInHouse1)]
-        public static CalculatorResult House8LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House8, House1, time),
+        public static CalculatorResult House8LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House8, House1, time),
             [House8, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House8LordInHouse2)]
-        public static CalculatorResult House8LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House8, House2, time),
+        public static CalculatorResult House8LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House8, House2, time),
             [House8, House2], time);
 
         [HoroscopeCalculator(HoroscopeName.House8LordInHouse3)]
-        public static CalculatorResult House8LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House8, House3, time),
+        public static CalculatorResult House8LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House8, House3, time),
             [House8, House3], time);
 
         [HoroscopeCalculator(HoroscopeName.House8LordInHouse4)]
-        public static CalculatorResult House8LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House8, House4, time),
+        public static CalculatorResult House8LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House8, House4, time),
             [House8, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House8LordInHouse5)]
-        public static CalculatorResult House8LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House8, House5, time),
+        public static CalculatorResult House8LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House8, House5, time),
             [House8, House5], time);
 
         [HoroscopeCalculator(HoroscopeName.House8LordInHouse6)]
-        public static CalculatorResult House8LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House8, House6, time),
+        public static CalculatorResult House8LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House8, House6, time),
             [House8, House6], time);
 
         [HoroscopeCalculator(HoroscopeName.House8LordInHouse7)]
-        public static CalculatorResult House8LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House8, House7, time),
+        public static CalculatorResult House8LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House8, House7, time),
             [House8, House7], time);
 
         [HoroscopeCalculator(HoroscopeName.House8LordInHouse8)]
-        public static CalculatorResult House8LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House8, House8, time),
+        public static CalculatorResult House8LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House8, House8, time),
             [House8, House8], time);
 
         [HoroscopeCalculator(HoroscopeName.House8LordInHouse9)]
-        public static CalculatorResult House8LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House8, House9, time),
+        public static CalculatorResult House8LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House8, House9, time),
             [House8, House9], time);
 
         [HoroscopeCalculator(HoroscopeName.House8LordInHouse10)]
-        public static CalculatorResult House8LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House8, House10, time),
+        public static CalculatorResult House8LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House8, House10, time),
             [House8, House10], time);
 
         [HoroscopeCalculator(HoroscopeName.House8LordInHouse11)]
-        public static CalculatorResult House8LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House8, House11, time),
+        public static CalculatorResult House8LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House8, House11, time),
             [House8, House11], time);
 
         [HoroscopeCalculator(HoroscopeName.House8LordInHouse12)]
-        public static CalculatorResult House8LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House8, House12, time),
+        public static CalculatorResult House8LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House8, House12, time),
             [House8, House12], time);
 
         #endregion
@@ -3180,51 +3194,51 @@ namespace VedAstro.Library
         #region Lord of the 9th House Occupying Different Houses
 
         [HoroscopeCalculator(HoroscopeName.House9LordInHouse1)]
-        public static CalculatorResult House9LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House9, House1, time),
+        public static CalculatorResult House9LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House9, House1, time),
             [House9, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House9LordInHouse2)]
-        public static CalculatorResult House9LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House9, House2, time),
+        public static CalculatorResult House9LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House9, House2, time),
             [House9, House2], time);
 
         [HoroscopeCalculator(HoroscopeName.House9LordInHouse3)]
-        public static CalculatorResult House9LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House9, House3, time),
+        public static CalculatorResult House9LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House9, House3, time),
             [House9, House3], time);
 
         [HoroscopeCalculator(HoroscopeName.House9LordInHouse4)]
-        public static CalculatorResult House9LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House9, House4, time),
+        public static CalculatorResult House9LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House9, House4, time),
             [House9, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House9LordInHouse5)]
-        public static CalculatorResult House9LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House9, House5, time),
+        public static CalculatorResult House9LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House9, House5, time),
             [House9, House5], time);
 
         [HoroscopeCalculator(HoroscopeName.House9LordInHouse6)]
-        public static CalculatorResult House9LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House9, House6, time),
+        public static CalculatorResult House9LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House9, House6, time),
             [House9, House6], time);
 
         [HoroscopeCalculator(HoroscopeName.House9LordInHouse7)]
-        public static CalculatorResult House9LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House9, House7, time),
+        public static CalculatorResult House9LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House9, House7, time),
             [House9, House7], time);
 
         [HoroscopeCalculator(HoroscopeName.House9LordInHouse8)]
-        public static CalculatorResult House9LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House9, House8, time),
+        public static CalculatorResult House9LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House9, House8, time),
             [House9, House8], time);
 
         [HoroscopeCalculator(HoroscopeName.House9LordInHouse9)]
-        public static CalculatorResult House9LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House9, House9, time),
+        public static CalculatorResult House9LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House9, House9, time),
             [House9, House9], time);
 
         [HoroscopeCalculator(HoroscopeName.House9LordInHouse10)]
-        public static CalculatorResult House9LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House9, House10, time),
+        public static CalculatorResult House9LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House9, House10, time),
             [House9, House10], time);
 
         [HoroscopeCalculator(HoroscopeName.House9LordInHouse11)]
-        public static CalculatorResult House9LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House9, House11, time),
+        public static CalculatorResult House9LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House9, House11, time),
             [House9, House11], time);
 
         [HoroscopeCalculator(HoroscopeName.House9LordInHouse12)]
-        public static CalculatorResult House9LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House9, House12, time),
+        public static CalculatorResult House9LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House9, House12, time),
             [House9, House12], time);
 
         #endregion
@@ -3232,40 +3246,40 @@ namespace VedAstro.Library
         #region Lord of the 10th House Occupying Different Houses
 
         [HoroscopeCalculator(HoroscopeName.House10LordInHouse1)]
-        public static CalculatorResult House10LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House10, House1, time),
+        public static CalculatorResult House10LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House10, House1, time),
             [House10, House1], time);
         [HoroscopeCalculator(HoroscopeName.House10LordInHouse2)]
-        public static CalculatorResult House10LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House10, House2, time),
+        public static CalculatorResult House10LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House10, House2, time),
             [House10, House2], time);
         [HoroscopeCalculator(HoroscopeName.House10LordInHouse3)]
-        public static CalculatorResult House10LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House10, House3, time),
+        public static CalculatorResult House10LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House10, House3, time),
             [House10, House3], time);
         [HoroscopeCalculator(HoroscopeName.House10LordInHouse4)]
-        public static CalculatorResult House10LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House10, House4, time),
+        public static CalculatorResult House10LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House10, House4, time),
             [House10, House4], time);
         [HoroscopeCalculator(HoroscopeName.House10LordInHouse5)]
-        public static CalculatorResult House10LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House10, House5, time),
+        public static CalculatorResult House10LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House10, House5, time),
             [House10, House5], time);
         [HoroscopeCalculator(HoroscopeName.House10LordInHouse6)]
-        public static CalculatorResult House10LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House10, House6, time),
+        public static CalculatorResult House10LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House10, House6, time),
             [House10, House6], time);
         [HoroscopeCalculator(HoroscopeName.House10LordInHouse7)]
-        public static CalculatorResult House10LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House10, House7, time),
+        public static CalculatorResult House10LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House10, House7, time),
             [House10, House7], time);
         [HoroscopeCalculator(HoroscopeName.House10LordInHouse8)]
-        public static CalculatorResult House10LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House10, House8, time),
+        public static CalculatorResult House10LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House10, House8, time),
             [House10, House8], time);
         [HoroscopeCalculator(HoroscopeName.House10LordInHouse9)]
-        public static CalculatorResult House10LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House10, House9, time),
+        public static CalculatorResult House10LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House10, House9, time),
             [House10, House9], time);
         [HoroscopeCalculator(HoroscopeName.House10LordInHouse10)]
-        public static CalculatorResult House10LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House10, House10, time),
+        public static CalculatorResult House10LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House10, House10, time),
             [House10, House10], time);
         [HoroscopeCalculator(HoroscopeName.House10LordInHouse11)]
-        public static CalculatorResult House10LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House10, House11, time),
+        public static CalculatorResult House10LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House10, House11, time),
             [House10, House11], time);
         [HoroscopeCalculator(HoroscopeName.House10LordInHouse12)]
-        public static CalculatorResult House10LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House10, House12, time),
+        public static CalculatorResult House10LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House10, House12, time),
             [House10, House12], time);
 
 
@@ -3274,51 +3288,51 @@ namespace VedAstro.Library
         #region Lord of the 11th House Occupying Different Houses
 
         [HoroscopeCalculator(HoroscopeName.House11LordInHouse1)]
-        public static CalculatorResult House11LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House11, House1, time),
+        public static CalculatorResult House11LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House11, House1, time),
             [House11, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House11LordInHouse2)]
-        public static CalculatorResult House11LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House11, House2, time),
+        public static CalculatorResult House11LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House11, House2, time),
             [House11, House2], time);
 
         [HoroscopeCalculator(HoroscopeName.House11LordInHouse3)]
-        public static CalculatorResult House11LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House11, House3, time),
+        public static CalculatorResult House11LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House11, House3, time),
             [House11, House3], time);
 
         [HoroscopeCalculator(HoroscopeName.House11LordInHouse4)]
-        public static CalculatorResult House11LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House11, House4, time),
+        public static CalculatorResult House11LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House11, House4, time),
             [House11, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House11LordInHouse5)]
-        public static CalculatorResult House11LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House11, House5, time),
+        public static CalculatorResult House11LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House11, House5, time),
             [House11, House5], time);
 
         [HoroscopeCalculator(HoroscopeName.House11LordInHouse6)]
-        public static CalculatorResult House11LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House11, House6, time),
+        public static CalculatorResult House11LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House11, House6, time),
             [House11, House6], time);
 
         [HoroscopeCalculator(HoroscopeName.House11LordInHouse7)]
-        public static CalculatorResult House11LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House11, House7, time),
+        public static CalculatorResult House11LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House11, House7, time),
             [House11, House7], time);
 
         [HoroscopeCalculator(HoroscopeName.House11LordInHouse8)]
-        public static CalculatorResult House11LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House11, House8, time),
+        public static CalculatorResult House11LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House11, House8, time),
             [House11, House8], time);
 
         [HoroscopeCalculator(HoroscopeName.House11LordInHouse9)]
-        public static CalculatorResult House11LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House11, House9, time),
+        public static CalculatorResult House11LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House11, House9, time),
             [House11, House9], time);
 
         [HoroscopeCalculator(HoroscopeName.House11LordInHouse10)]
-        public static CalculatorResult House11LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House11, House10, time),
+        public static CalculatorResult House11LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House11, House10, time),
             [House11, House10], time);
 
         [HoroscopeCalculator(HoroscopeName.House11LordInHouse11)]
-        public static CalculatorResult House11LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House11, House11, time),
+        public static CalculatorResult House11LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House11, House11, time),
             [House11, House11], time);
 
         [HoroscopeCalculator(HoroscopeName.House11LordInHouse12)]
-        public static CalculatorResult House11LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House11, House12, time),
+        public static CalculatorResult House11LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House11, House12, time),
             [House11, House12], time);
 
         #endregion
@@ -3326,51 +3340,51 @@ namespace VedAstro.Library
         #region Lord of the 12th House Occupying Different Houses
 
         [HoroscopeCalculator(HoroscopeName.House12LordInHouse1)]
-        public static CalculatorResult House12LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House12, House1, time),
+        public static CalculatorResult House12LordInHouse1Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House12, House1, time),
             [House12, House1], time);
 
         [HoroscopeCalculator(HoroscopeName.House12LordInHouse2)]
-        public static CalculatorResult House12LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House12, House2, time),
+        public static CalculatorResult House12LordInHouse2Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House12, House2, time),
             [House12, House2], time);
 
         [HoroscopeCalculator(HoroscopeName.House12LordInHouse3)]
-        public static CalculatorResult House12LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House12, House3, time),
+        public static CalculatorResult House12LordInHouse3Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House12, House3, time),
             [House12, House3], time);
 
         [HoroscopeCalculator(HoroscopeName.House12LordInHouse4)]
-        public static CalculatorResult House12LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House12, House4, time),
+        public static CalculatorResult House12LordInHouse4Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House12, House4, time),
             [House12, House4], time);
 
         [HoroscopeCalculator(HoroscopeName.House12LordInHouse5)]
-        public static CalculatorResult House12LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House12, House5, time),
+        public static CalculatorResult House12LordInHouse5Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House12, House5, time),
             [House12, House5], time);
 
         [HoroscopeCalculator(HoroscopeName.House12LordInHouse6)]
-        public static CalculatorResult House12LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House12, House6, time),
+        public static CalculatorResult House12LordInHouse6Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House12, House6, time),
             [House12, House6], time);
 
         [HoroscopeCalculator(HoroscopeName.House12LordInHouse7)]
-        public static CalculatorResult House12LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House12, House7, time),
+        public static CalculatorResult House12LordInHouse7Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House12, House7, time),
             [House12, House7], time);
 
         [HoroscopeCalculator(HoroscopeName.House12LordInHouse8)]
-        public static CalculatorResult House12LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House12, House8, time),
+        public static CalculatorResult House12LordInHouse8Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House12, House8, time),
             [House12, House8], time);
 
         [HoroscopeCalculator(HoroscopeName.House12LordInHouse9)]
-        public static CalculatorResult House12LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House12, House9, time),
+        public static CalculatorResult House12LordInHouse9Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House12, House9, time),
             [House12, House9], time);
 
         [HoroscopeCalculator(HoroscopeName.House12LordInHouse10)]
-        public static CalculatorResult House12LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House12, House10, time),
+        public static CalculatorResult House12LordInHouse10Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House12, House10, time),
             [House12, House10], time);
 
         [HoroscopeCalculator(HoroscopeName.House12LordInHouse11)]
-        public static CalculatorResult House12LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House12, House11, time),
+        public static CalculatorResult House12LordInHouse11Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House12, House11, time),
             [House12, House11], time);
 
         [HoroscopeCalculator(HoroscopeName.House12LordInHouse12)]
-        public static CalculatorResult House12LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouse(House12, House12, time),
+        public static CalculatorResult House12LordInHouse12Occuring(Time time) => CalculatorResult.New(Calculate.IsHouseLordInHouseBasedOnLongitudes(House12, House12, time),
             [House12, House12], time);
 
         #endregion
